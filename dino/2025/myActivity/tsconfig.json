@@ -1,0 +1,20 @@
+{
+  "baseUrl": ".",
+  "extends": "../../../tsconfig.common.json",
+  "include": ["../../../env.d.ts", "../../../common/**/*", "./**/*.ts", "./**/*.vue"],
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["../../../common/*"],
+      "@CC/*": ["../../../common/components/*"],
+      "@CF/*": ["../../../common/fonts/*"],
+      "@CU/*": ["../../../common/utils/*"],
+      "@CS/*": ["../../../common/store/*"],
+
+      "@PF/*": ["./*"],
+      "@PFC/*": ["./components/*"],
+      "@PFF/*": ["./fonts/*"],
+      "@PFU/*": ["./utils/*"],
+      "@PFS/*": ["./store/*"]
+    }
+  }
+}
