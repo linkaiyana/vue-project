@@ -3,6 +3,8 @@
   "extends": "../../../tsconfig.common.json",
   "include": ["../../../types/*.d.ts", "../../../common/**/*", "./**/*.ts", "./**/*.vue"],
   "compilerOptions": {
+    "jsx": "preserve",
+
     "paths": {
       "@/*": ["../../../common/*"],
       "@CC/*": ["../../../common/components/*"],
