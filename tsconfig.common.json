@@ -6,13 +6,6 @@
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "composite": true,
-    "paths": {
-      "@/*": ["./common/*"],
-      "@CC/*": ["./common/components/*"],
-      "@CF/*": ["./common/fonts/*"],
-      "@CU/*": ["./common/utils/*"],
-      "@CS/*": ["./common/store/*"]
-    }
+    "composite": true
   }
 }
