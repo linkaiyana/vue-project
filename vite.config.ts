@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-02 15:01:44
- * @LastEditTime: 2025-12-18 16:35:36
+ * @LastEditTime: 2025-12-18 17:33:30
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -13,12 +13,11 @@ import { resolve } from 'path'
 import vaildParams from './vite/utils/vaildParams'
 import AutoImportDeps from './vite/plugins/autoImport'
 import AutoRegistryComponents from './vite/plugins/components'
+import AutoPages from './vite/plugins/pages'
 
 // 解析命令行参数，获取 appPath
-const argv = process.argv.slice(0)
-
+const argv = process.argv
 const appPath = vaildParams(argv[argv.length - 1])
-
 console.log('%c [ appPath ]-12', 'font-size:13px; background:pink; color:#bf2c9f;', appPath)
 
 export default defineConfig((ctx) => {
@@ -27,7 +26,7 @@ export default defineConfig((ctx) => {
   const customEntry = appPath ? resolve(__dirname, `${appPath}`) : undefined
 
   return {
-    plugins: [vue(), vueDevTools(), AutoImportDeps(), AutoRegistryComponents()],
+    plugins: [vue(), vueDevTools(), AutoImportDeps(), AutoRegistryComponents(), AutoPages()],
     resolve: {
       alias: {
         '@': resolve(__dirname, 'common'),
