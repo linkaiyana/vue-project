@@ -13,11 +13,8 @@ dist
 dist-ssr
 coverage
 *.local
-.eslintcache
 
 # Editor directories and files
-.vscode/*
-!.vscode/extensions.json
 .idea
 *.suo
 *.ntvs*

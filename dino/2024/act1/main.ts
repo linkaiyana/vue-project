@@ -7,9 +7,6 @@
  */
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
-// <% if (needI18n) %>
-import creatI18n from '@/plugins/i18n'
-// <% endif %>
 
 import App from './App.vue'
 import router from './router'
@@ -22,8 +19,5 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
-// <% if (needI18n) %>
-app.use(creatI18n)
-// <% endif %>
 
 app.mount('#app')

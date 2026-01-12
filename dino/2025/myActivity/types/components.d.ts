@@ -11,14 +11,9 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    A: typeof import('./../components/a.vue')['default']
-    Empty: typeof import('./../../../../common/components/Empty.vue')['default']
     InnerComponents: typeof import('./../components/innerComponents.vue')['default']
-    MProgress: typeof import('./../../../../common/components/MProgress.vue')['default']
     OuterComponents: typeof import('./../../../../common/components/outerComponents.vue')['default']
-    Picture: typeof import('./../../../../common/components/Picture.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    VanButton: typeof import('vant/es')['Button']
   }
 }

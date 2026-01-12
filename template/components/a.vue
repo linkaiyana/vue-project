@@ -1,7 +1,7 @@
 <!--
  * @Author: linkaiyan
- * @Date: 2025-12-02 15:34:56
- * @LastEditTime: 2026-01-05 17:10:34
+ * @Date: 2026-01-09 18:32:39
+ * @LastEditTime: 2026-01-09 18:32:46
  * @LastEditors: linkaiyan
  * @Description:
 -->
@@ -10,11 +10,9 @@
 </script>
 
 <template>
-  <div>
-    <OuterComponents />
-    <InnerComponents />
-    222
-  </div>
+  123
+
+  哈哈哈
 </template>
 
 <style lang='scss' scoped>

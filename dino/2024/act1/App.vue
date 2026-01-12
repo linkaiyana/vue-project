@@ -1,14 +1,11 @@
 <!--
  * @Author: linkaiyan
  * @Date: 2025-12-03 15:00:50
- * @LastEditTime: 2026-01-12 16:37:45
+ * @LastEditTime: 2026-01-09 19:00:07
  * @LastEditors: linkaiyan
  * @Description:
 -->
 <script setup lang="ts">
-const a = ref(1)
-
-console.log(a)
 </script>
 
 <template>

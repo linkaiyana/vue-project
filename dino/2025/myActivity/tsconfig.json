@@ -1,7 +1,7 @@
 {
   "baseUrl": ".",
   "extends": "../../../tsconfig.common.json",
-  "include": ["../../../env.d.ts", "../../../common/**/*", "./**/*.ts", "./**/*.vue"],
+  "include": ["../../../types/*.d.ts", "../../../common/**/*", "./**/*.ts", "./**/*.vue"],
   "compilerOptions": {
     "paths": {
       "@/*": ["../../../common/*"],

@@ -1,19 +1,19 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-02 15:01:44
- * @LastEditTime: 2025-12-18 17:33:30
+ * @LastEditTime: 2026-01-09 18:57:16
  * @LastEditors: linkaiyan
  * @Description:
  */
-// vite.config.ts
-import { defineConfig } from 'vite'
+import { resolve } from 'node:path'
 import vue from '@vitejs/plugin-vue'
+import UnoCSS from 'unocss/vite'
+import { defineConfig } from 'vite'
 import vueDevTools from 'vite-plugin-vue-devtools'
-import { resolve } from 'path'
-import vaildParams from './vite/utils/vaildParams'
 import AutoImportDeps from './vite/plugins/autoImport'
 import AutoRegistryComponents from './vite/plugins/components'
 import AutoPages from './vite/plugins/pages'
+import vaildParams from './vite/utils/vaildParams'
 
 // 解析命令行参数，获取 appPath
 const argv = process.argv
@@ -23,10 +23,17 @@ console.log('%c [ appPath ]-12', 'font-size:13px; background:pink; color:#bf2c9f
 export default defineConfig((ctx) => {
   console.log('%c [ command ]-22', 'font-size:13px; background:pink; color:#bf2c9f;', ctx)
   // 如果提供了应用路径参数，则使用指定路径作为入口
-  const customEntry = appPath ? resolve(__dirname, `${appPath}`) : undefined
+  const customEntry = appPath ? resolve(__dirname, `${appPath}`) : ''
 
   return {
-    plugins: [vue(), vueDevTools(), AutoImportDeps(), AutoRegistryComponents(), AutoPages()],
+    plugins: [
+      vue(),
+      vueDevTools(),
+      AutoImportDeps(),
+      AutoRegistryComponents(),
+      AutoPages(),
+      UnoCSS(),
+    ],
     resolve: {
       alias: {
         '@': resolve(__dirname, 'common'),
