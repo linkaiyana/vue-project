@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-02 15:01:44
- * @LastEditTime: 2026-01-12 09:48:14
+ * @LastEditTime: 2026-01-13 12:06:01
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -18,6 +18,7 @@ export default antfu(
       'no-unused-expressions': 'off',
       'node/prefer-global/process': 'off',
       'no-console': 'warn',
+      'ts/ban-ts-comment': 'off',
       'vue/component-name-in-template-casing': [
         'error',
         'PascalCase',
