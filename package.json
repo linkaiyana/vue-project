@@ -8,6 +8,8 @@
   },
   "scripts": {
     "dev": "vite --",
+    "dev:test": "vite --mode test --",
+    "dev:prod": "vite --mode production --",
     "check": "pnpm esno ./commands/customScripts.ts check",
     "build": "pnpm esno ./commands/customScripts.ts build",
     "lint": "eslint .  --cache",

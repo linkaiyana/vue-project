@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-02 15:01:44
- * @LastEditTime: 2026-01-13 17:37:12
+ * @LastEditTime: 2026-01-14 16:24:56
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -58,6 +58,7 @@ export default defineConfig((ctx) => {
     },
     css: transformCss(),
     root: ctx.isPreview ? '' : `${appPath}`,
+    envDir: resolve(__dirname), // 强制 Vite 在项目根目录寻找环境文件
     build: {
       outDir: resolve(__dirname, `dist/${appPath}`),
       rollupOptions: {
