@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-02 15:01:44
- * @LastEditTime: 2026-01-14 16:24:56
+ * @LastEditTime: 2026-01-27 15:28:51
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -79,6 +79,11 @@ export default defineConfig((ctx) => {
           assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
         },
       },
+    },
+
+    server: {
+      host: '0.0.0.0',
+      port: 9999,
     },
 
     preview: {

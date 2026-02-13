@@ -1,12 +1,13 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-03 15:00:50
- * @LastEditTime: 2026-01-12 14:33:43
+ * @LastEditTime: 2026-01-27 15:44:33
  * @LastEditors: linkaiyan
  * @Description:
  */
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
+import { isDebug } from '@/constants'
 
 import App from './App.vue'
 import router from './router'
@@ -19,5 +20,13 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+
+if (isDebug) {
+  setTimeout(() => {
+    if ('VConsole' in window && window.VConsole) {
+      new (window.VConsole as any)()
+    }
+  }, 2000)
+}
 
 app.mount('#app')

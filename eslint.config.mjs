@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-02 15:01:44
- * @LastEditTime: 2026-01-13 12:06:01
+ * @LastEditTime: 2026-01-27 15:44:16
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -17,6 +17,7 @@ export default antfu(
       'vue/multi-word-component-names': 'off',
       'no-unused-expressions': 'off',
       'node/prefer-global/process': 'off',
+      'no-new': 'off',
       'no-console': 'warn',
       'ts/ban-ts-comment': 'off',
       'vue/component-name-in-template-casing': [

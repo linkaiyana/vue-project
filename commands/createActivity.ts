@@ -88,7 +88,7 @@ async function createActivity() {
   }
 }
 
-/** 核心处理器：修正了 constant.ts 的占位符替换 */
+/** 内容替换 */
 function processFile(sourcePath: string, targetPath: string, fileName: string, options: any) {
   const textExtensions = ['.ts', '.js', '.vue', '.json', '.html', '.scss', '.css']
   if (!textExtensions.includes(path.extname(fileName))) {
@@ -100,7 +100,6 @@ function processFile(sourcePath: string, targetPath: string, fileName: string, o
 
   switch (fileName) {
     case 'constant.ts': {
-      // 替换逻辑：匹配 Boolean('...') 结构并替换为真正的 true/false
       content = content
         .replace(/'\{\{FOLDER_NAME\}\}'/g, `'${options.folderName}'`)
         .replace(/Boolean\('\{\{IS_USE_UNOCSS\}\}'\)/g, String(options.useUnocss))
@@ -129,7 +128,7 @@ function processFile(sourcePath: string, targetPath: string, fileName: string, o
   fs.writeFileSync(targetPath, content, 'utf-8')
 }
 /**
- * 递归复制函数
+ * 递归复制
  */
 function copyAndProcessTemplate(source: string, target: string, options: any) {
   const files = fs.readdirSync(source)

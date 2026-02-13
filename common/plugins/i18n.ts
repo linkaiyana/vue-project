@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-19 14:52:16
- * @LastEditTime: 2025-12-22 15:18:24
+ * @LastEditTime: 2026-01-27 10:36:13
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -33,22 +33,10 @@ export default {
         // 缓存结果
         localeCache[locale] = result
         return result
-      } catch (error) {
+      }
+      catch (error) {
         console.warn(`无法加载语言包: ${locale}`, error)
-        // 加载默认语言包
-        if (locale !== 'zh-CN') {
-          try {
-            const fallbackMessages = await import(`@PF/locales/zh-CN.json`)
-            const result = fallbackMessages.default || fallbackMessages
-            // 缓存结果
-            localeCache['zh-CN'] = result
-            return result
-          } catch (fallbackError) {
-            console.error('无法加载默认语言包', fallbackError)
-            return {}
-          }
-        }
-        return {}
+        return null
       }
     }
 

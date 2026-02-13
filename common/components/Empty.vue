@@ -1,7 +1,7 @@
 <!--
  * @Author: linkaiyan
  * @Date: 2025-09-23 11:58:00
- * @LastEditTime: 2025-10-30 10:34:16
+ * @LastEditTime: 2026-02-11 14:11:20
  * @LastEditors: linkaiyan
  * @Description:
 -->
@@ -27,7 +27,6 @@ defineProps({
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: Roboto sans-serif;
   font-size: 24px;
   color: #3a596d;
 }

@@ -1,14 +1,16 @@
 <!--
  * @Author: linkaiyan
  * @Date: 2025-12-03 15:00:50
- * @LastEditTime: 2026-01-12 16:37:45
+ * @LastEditTime: 2026-01-28 10:39:13
  * @LastEditors: linkaiyan
  * @Description:
 -->
 <script setup lang="ts">
-const a = ref(1)
+const a = ref<ActivityParamIdDto>({ id: 1 })
 
 console.log(a)
+
+console.log(import.meta.env.VITE_BACKEND_URL)
 </script>
 
 <template>

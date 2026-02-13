@@ -1,8 +1,8 @@
 {
-    "baseUrl": ".",
 
   "extends": "../../../tsconfig.common.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "paths": {
       "@/*": ["../../../common/*"],
       "@CC/*": ["../../../common/components/*"],
@@ -17,5 +17,5 @@
       "@PFS/*": ["./store/*"]
     }
   },
-  "include": ["../../../types/*.d.ts", "../../../common/**/*", "./**/*.ts", "./**/*.vue"]
+  "include": ["../../../types/*.d.ts", "../../../common/**/*", "./**/*.ts", "./**/*.vue", "./types/*.d.ts"]
 }

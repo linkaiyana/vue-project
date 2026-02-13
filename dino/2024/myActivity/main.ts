@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-03 15:00:50
- * @LastEditTime: 2026-01-12 14:33:43
+ * @LastEditTime: 2026-01-28 11:11:19
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -25,5 +25,7 @@ app.use(router)
 // <% if (needI18n) %>
 app.use(creatI18n)
 // <% endif %>
+
+console.log(app)
 
 app.mount('#app')
