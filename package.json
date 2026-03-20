@@ -18,7 +18,8 @@
     "lint:project:fix": "esno ./commands/customScripts.ts lint:fix",
     "preview": "esno ./commands/customScripts.ts preview",
     "createActivity": "esno ./commands/createActivity.ts",
-    "fontMin": "esno ./commands/fontMin.ts"
+    "fontMin": "esno ./commands/fontMin.ts",
+    "fetchLanguage": "esno ./commands/fetchLanguage"
   },
   "dependencies": {
     "@inquirer/prompts": "^8.1.0",
@@ -45,6 +46,7 @@
     "eslint-plugin-format": "^1.2.0",
     "esno": "^4.8.0",
     "fontmin": "^1.1.1",
+    "googleapis": "^168.0.0",
     "jiti": "^2.6.1",
     "npm-run-all2": "^8.0.4",
     "ora": "^9.0.0",

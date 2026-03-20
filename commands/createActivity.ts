@@ -1,7 +1,7 @@
 import { spawn } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
-import { confirm, input, select } from '@inquirer/prompts'
+import { checkbox, confirm, input, select } from '@inquirer/prompts'
 import pc from 'picocolors'
 
 async function createActivity() {
@@ -42,12 +42,26 @@ async function createActivity() {
 
   const targetPath = path.join(selectedApp, folder, folderName)
   if (fs.existsSync(targetPath)) {
-    console.error(pc.red(`\n❌ 错误: 路径 ${targetPath} 已存在`))
+    console.error(pc.red(`\n❌ 错误：路径 ${targetPath} 已存在`))
     process.exit(1)
   }
 
-  const needI18n = await confirm({ message: pc.blue('是否启用 i18n 国际化?') })
-  const useUnocss = await confirm({ message: pc.blue('是否启用 UnoCSS?'), default: true })
+  const needI18n = await confirm({ message: pc.blue('是否启用 i18n 国际化？') })
+
+  let selectedLanguages: string[] = []
+  if (needI18n) {
+    selectedLanguages = await checkbox({
+      message: pc.blue('请选择需要的语言包:'),
+      choices: [
+        { name: 'zh-CN', value: 'zh-CN', checked: false },
+        { name: 'zh-TW', value: 'zh-TW', checked: false },
+        { name: 'vi-VN', value: 'vi-VN', checked: false },
+        { name: 'ko-KR', value: 'ko-KR', checked: false },
+        { name: 'en-US', value: 'en-US', checked: false },
+      ],
+      required: true,
+    })
+  }
 
   // --- 2. 生成阶段 ---
   try {
@@ -58,8 +72,8 @@ async function createActivity() {
       folderName,
       activityTitle,
       needI18n,
-      useUnocss,
       targetRelativePath: targetPath,
+      selectedLanguages,
     }
 
     copyAndProcessTemplate('template', targetPath, options)
@@ -67,14 +81,13 @@ async function createActivity() {
     console.warn(`\n${pc.green('─'.repeat(45))}`)
     console.warn(pc.green('✨ 活动创建成功！'))
     console.warn(`${pc.bold('📂 目录路径:')} ${pc.cyan(targetPath)}`)
-    console.warn(`${pc.bold('🏷️ 页面标题:')} ${pc.cyan(activityTitle)}`)
-    console.warn(`${pc.bold('🎨 UnoCSS:')}   ${useUnocss ? pc.green('已启用') : pc.gray('未启用')}`)
-    console.warn(`${pc.bold('🌍 国际化:')}   ${needI18n ? pc.green('已启用') : pc.gray('未启用')}`)
+    console.warn(`${pc.bold('🏷️  页面标题:')} ${pc.cyan(activityTitle)}`)
+    console.warn(`${pc.bold('🌍 国际化:')}   ${needI18n ? pc.green(`已启用 (${selectedLanguages.join(', ')})`) : pc.gray('未启用')}`)
     console.warn(`${pc.green('─'.repeat(45))}\n`)
 
     // --- 3. 运行询问 ---
     const shouldRun = await confirm({
-      message: pc.yellow(`是否立即运行该活动? (pnpm dev ${targetPath})`),
+      message: pc.yellow(`是否立即运行该活动？(pnpm dev ${targetPath})`),
       default: true,
     })
 
@@ -99,11 +112,15 @@ function processFile(sourcePath: string, targetPath: string, fileName: string, o
   let content = fs.readFileSync(sourcePath, 'utf-8')
 
   switch (fileName) {
-    case 'constant.ts': {
+    case 'constants.ts': {
+      const languagesArrayStr = options.selectedLanguages.length > 0
+        ? `[${options.selectedLanguages.map(lang => `'${lang}'`).join(', ')}]`
+        : '[]'
+
       content = content
-        .replace(/'\{\{FOLDER_NAME\}\}'/g, `'${options.folderName}'`)
-        .replace(/Boolean\('\{\{IS_USE_UNOCSS\}\}'\)/g, String(options.useUnocss))
+        .replace(/'\{\{FOLDER_NAME\}\}'/g, `'${sourcePath}'`)
         .replace(/Boolean\('\{\{IS_USE_I18N\}\}'\)/g, String(options.needI18n))
+        .replace(/'\{\{LANGUAGES_LIST\}\}'/g, languagesArrayStr)
       break
     }
     case 'index.html': {
@@ -115,7 +132,6 @@ function processFile(sourcePath: string, targetPath: string, fileName: string, o
     case 'main.ts': {
       content = processConditionalBlocks(content, {
         needI18n: options.needI18n,
-        useUnocss: options.useUnocss,
       })
       break
     }
