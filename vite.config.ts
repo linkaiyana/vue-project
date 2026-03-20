@@ -1,16 +1,16 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-02 15:01:44
- * @LastEditTime: 2026-03-20 15:17:52
+ * @LastEditTime: 2026-03-20 17:16:34
  * @LastEditors: linkaiyan
  * @Description:
  */
 import { resolve } from 'node:path'
 import legacy from '@vitejs/plugin-legacy'
 import vue from '@vitejs/plugin-vue'
-import { visualizer } from 'rollup-plugin-visualizer'
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vite'
+import viteCompression from 'vite-plugin-compression'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import AutoImportDeps from './vite/plugins/autoImport'
 import AutoRegistryComponents from './vite/plugins/components'
@@ -36,11 +36,18 @@ export default defineConfig((ctx) => {
       AutoPages(),
       UnoCSS(),
       legacy(),
-      visualizer({
-        open: true, // 打包完成后自动打开分析页面
-        filename: `dist/${appPath}/stats.html`, // 生成的分析文件名
-        gzipSize: true, // 显示 gzip 后的体积
+      viteCompression({
+        verbose: true, // 是否在控制台输出压缩结果
+        disable: false, // 是否禁用
+        threshold: 10240, // 体积大于 10KB 的才压缩
+        algorithm: 'gzip', // 压缩算法
+        ext: '.gz', // 文件后缀
       }),
+      // visualizer({
+      //   open: true, // 打包完成后自动打开分析页面
+      //   filename: `dist/${appPath}/stats.html`, // 生成的分析文件名
+      //   gzipSize: true, // 显示 gzip 后的体积
+      // }),
     ],
     resolve: {
       alias: {
