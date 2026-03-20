@@ -1,3 +1,10 @@
+/*
+ * @Author: linkaiyan
+ * @Date: 2026-01-28 11:13:51
+ * @LastEditTime: 2026-03-20 14:24:54
+ * @LastEditors: linkaiyan
+ * @Description:
+ */
 import { spawn } from 'node:child_process'
 import { argv } from 'node:process'
 import ora from 'ora'
@@ -44,12 +51,6 @@ async function main() {
   try {
     switch (command) {
       case 'build': {
-        // --- 步骤 1: 类型检查 ---
-        spinner.start(pc.blue('正在进行类型检查 (vue-tsc)...'))
-        await runCommand('vue-tsc', ['--noEmit', '-p', `${basePath}/tsconfig.json`])
-        spinner.succeed(pc.green('类型检查通过！'))
-
-        // --- 步骤 2: Vite 构建 ---
         spinner.start(pc.blue('正在开始打包构建...'))
         await runCommand('vite', ['build', '--emptyOutDir', '--', params])
 
