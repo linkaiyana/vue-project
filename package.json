@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@inquirer/prompts": "^8.1.0",
+    "@sentry/vue": "^10.46.0",
     "pinia": "^3.0.4",
     "unplugin-auto-import": "^20.3.0",
     "vant": "^4.9.22",

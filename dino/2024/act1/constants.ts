@@ -1,12 +1,12 @@
 /*
  * @Author: linkaiyan
  * @Date: 2026-01-12 16:54:22
- * @LastEditTime: 2026-03-20 10:32:29
+ * @LastEditTime: 2026-03-26 11:08:51
  * @LastEditors: linkaiyan
  * @Description:
  */
 // 活动文件夹名
-const activityName = 'act1'
+const activityName = 'dino:2024:act1'
 
 // 是否开启 unocss
 const isUseUnocss = true

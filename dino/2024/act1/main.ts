@@ -1,13 +1,15 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-03 15:00:50
- * @LastEditTime: 2026-01-27 15:44:33
+ * @LastEditTime: 2026-03-26 11:24:50
  * @LastEditors: linkaiyan
  * @Description:
  */
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import { isDebug } from '@/constants'
+import creatI18n from '@/plugins/i18n'
+import createSentry from '@/plugins/sentry'
 
 import App from './App.vue'
 import router from './router'
@@ -20,6 +22,8 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+app.use(creatI18n)
+app.use(createSentry)
 
 if (isDebug) {
   setTimeout(() => {

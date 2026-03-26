@@ -1,7 +1,7 @@
 <!--
  * @Author: linkaiyan
  * @Date: 2025-12-02 15:34:39
- * @LastEditTime: 2026-01-09 18:34:06
+ * @LastEditTime: 2026-03-26 11:21:06
  * @LastEditors: linkaiyan
  * @Description:
 -->
@@ -14,7 +14,7 @@ showToast('hahah')
 </script>
 
 <template>
-  {{ t('test') }}
+  {{ t('txt1') }}
   <VanButton class="mt-5" bg="red">
     hha
   </VanButton>

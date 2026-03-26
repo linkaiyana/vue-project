@@ -1,5 +1,5 @@
 // 活动文件夹名
-const activityName = 'act2'
+const activityName = 'dino:2024:act2'
 
 // 是否开启 unocss
 const isUseUnocss = true
