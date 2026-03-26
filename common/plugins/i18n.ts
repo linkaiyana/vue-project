@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-19 14:52:16
- * @LastEditTime: 2026-01-27 10:36:13
+ * @LastEditTime: 2026-03-26 14:23:16
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -36,7 +36,7 @@ export default {
       }
       catch (error) {
         console.warn(`无法加载语言包: ${locale}`, error)
-        return null
+        return {}
       }
     }
 
@@ -64,6 +64,10 @@ export default {
         }
       }
     }
+
+    initI18n().catch((error) => {
+      console.error('i18n 初始化失败:', error)
+    })
 
     initI18n()
   },
