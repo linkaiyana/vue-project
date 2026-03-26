@@ -13,6 +13,7 @@
     "dev:prod": "vite --mode production --",
     "check": "esno ./commands/customScripts.ts check",
     "build": "esno ./commands/customScripts.ts build",
+    "build:test": "esno ./commands/customScripts.ts build:test",
     "lint": "eslint .  --cache",
     "lint:fix": "eslint . --fix --cache",
     "lint:project": "esno ./commands/customScripts.ts lint",

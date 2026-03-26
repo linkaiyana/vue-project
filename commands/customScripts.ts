@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2026-01-28 11:13:51
- * @LastEditTime: 2026-03-20 14:24:54
+ * @LastEditTime: 2026-03-26 12:06:30
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -50,12 +50,20 @@ async function main() {
 
   try {
     switch (command) {
-      case 'build': {
-        spinner.start(pc.blue('正在开始打包构建...'))
-        await runCommand('vite', ['build', '--emptyOutDir', '--', params])
+      case 'build':
+      case 'build:test': {
+        const isTest = command === 'build:test'
+        spinner.start(pc.blue(isTest ? '正在开始测试环境构建...' : '正在开始打包构建...'))
+
+        const args = ['build', '--emptyOutDir', '--', params]
+        if (isTest) {
+          args.unshift('--mode', 'test')
+        }
+
+        await runCommand('vite', args)
 
         console.warn(`\n${pc.green('─'.repeat(45))}`)
-        spinner.succeed(pc.green('项目构建完成！'))
+        spinner.succeed(pc.green(isTest ? '测试环境构建完成！' : '项目构建完成！'))
         console.warn(`${pc.bold('📂 输出目录:')} ${pc.cyan(`dist/${basePath}`)}`)
         console.warn(`${pc.green('─'.repeat(45))}\n`)
         break
