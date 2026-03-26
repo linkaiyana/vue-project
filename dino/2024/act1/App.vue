@@ -1,7 +1,7 @@
 <!--
  * @Author: linkaiyan
  * @Date: 2025-12-03 15:00:50
- * @LastEditTime: 2026-03-20 14:13:17
+ * @LastEditTime: 2026-03-26 11:53:17
  * @LastEditors: linkaiyan
  * @Description:
 -->
@@ -12,6 +12,7 @@
   <ul>
     <li class="mb-5 mb10">
       1哈哈哈哈活动1
+      版本1.0.0
     </li>
     <li>2</li>
     <li>3</li>
