@@ -1,17 +1,20 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-19 14:52:16
- * @LastEditTime: 2026-03-26 14:23:16
+ * @LastEditTime: 2026-03-26 14:39:39
  * @LastEditors: linkaiyan
  * @Description:
  */
 import type { App } from 'vue'
+import zhCN from '@PF/locales/zh-CN.json'
 import { createI18n } from 'vue-i18n'
 
 export default {
   install(app: App) {
     // 语言包缓存
-    const localeCache: Record<string, any> = {}
+    const localeCache: Record<string, any> = {
+      'zh-CN': zhCN,
+    }
 
     // 获取当前语言环境
     const getCurrentLocale = () => {
@@ -23,6 +26,7 @@ export default {
     const loadLocaleMessages = async (locale: string) => {
       // 如果已经在缓存中，直接返回
       if (localeCache[locale]) {
+        console.log('%c [ localeCache ]-29', 'font-size:13px; background:pink; color:#bf2c9f;', localeCache)
         return localeCache[locale]
       }
 
