@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2026-03-11 17:53:04
- * @LastEditTime: 2026-03-26 11:28:17
+ * @LastEditTime: 2026-03-26 11:45:40
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -25,7 +25,7 @@ export default {
         Sentry.browserTracingIntegration(),
       ],
       // Performance Monitoring
-      tracesSampleRate: 0.1, //  Capture 100% of the transactions
+      tracesSampleRate: 1.0, //  Capture 100% of the transactions
       // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
       tracePropagationTargets: [
         // 'localhost',
