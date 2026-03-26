@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2026-03-11 17:53:04
- * @LastEditTime: 2026-03-26 11:52:41
+ * @LastEditTime: 2026-03-26 12:01:58
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -22,7 +22,18 @@ export default {
       app,
       dsn: 'https://ba407523305c76c44cc851938b31e27c@o4510996408762368.ingest.us.sentry.io/4511025244536832',
       integrations: [
-        Sentry.browserTracingIntegration(),
+        Sentry.browserTracingIntegration({
+          beforeStartSpan: (context) => {
+            // op 为 'pageload' 表示页面首次加载，'navigation' 表示路由切换
+            if (context.op === 'pageload' || context.op === 'navigation') {
+              return {
+                ...context,
+                name: `Activity: ${activityName}`, // 强制指定你想要的名字
+              }
+            }
+            return context
+          },
+        }),
       ],
       // Performance Monitoring
       tracesSampleRate: 1.0, //  Capture 100% of the transactions
