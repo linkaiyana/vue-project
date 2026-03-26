@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2026-03-11 17:53:04
- * @LastEditTime: 2026-03-26 11:45:40
+ * @LastEditTime: 2026-03-26 11:52:41
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -20,7 +20,7 @@ export default {
 
     Sentry.init({
       app,
-      dsn: 'https://54ccc7f7ff93038bc557696e00519534@sg-sentry.changzhi.top/50',
+      dsn: 'https://ba407523305c76c44cc851938b31e27c@o4510996408762368.ingest.us.sentry.io/4511025244536832',
       integrations: [
         Sentry.browserTracingIntegration(),
       ],
