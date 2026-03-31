@@ -46,7 +46,7 @@ function readPackageVersion(packageName: string) {
 function readSharedVendorConfig(projectRoot: string, env: Record<string, string>) {
   const manifestSource = readManifestSource(projectRoot)
   const sharedVendorBaseUrl = normalizePath(env.VITE_SHARED_VENDOR_BASE_URL || process.env.VITE_SHARED_VENDOR_BASE_URL || '')
-  const remotePrefix = normalizePath(process.env.SHARED_VENDOR_REMOTE_PREFIX || 'shared/vendor')
+  const remotePrefix = normalizePath(process.env.SHARED_VENDOR_REMOTE_PREFIX || 'vendor')
 
   if (!manifestSource) {
     return {
