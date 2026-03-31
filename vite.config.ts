@@ -34,6 +34,7 @@ export default defineConfig((ctx) => {
 
   return {
     base: './',
+    assetsInclude: ['**/*.svga'],
     plugins: [
       vue(),
       isDev && vueDevTools(),
