@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-02 15:01:44
- * @LastEditTime: 2026-03-20 17:16:34
+ * @LastEditTime: 2026-03-31 16:13:13
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -9,46 +9,42 @@ import { resolve } from 'node:path'
 import legacy from '@vitejs/plugin-legacy'
 import vue from '@vitejs/plugin-vue'
 import UnoCSS from 'unocss/vite'
-import { defineConfig } from 'vite'
-import viteCompression from 'vite-plugin-compression'
+import { defineConfig, loadEnv } from 'vite'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import AutoImportDeps from './vite/plugins/autoImport'
 import AutoRegistryComponents from './vite/plugins/components'
 import AutoPages from './vite/plugins/pages'
 import transformCss from './vite/plugins/postcss'
+import { createSharedVendorPlugin, readSharedVendorConfig } from './vite/plugins/sharedVendor'
+import initVConsole from './vite/plugins/vConsole'
 import vaildParams from './vite/utils/vaildParams'
 
-// 解析命令行参数，获取 appPath
+// Parse the current activity path from the CLI arguments.
 const argv = process.argv
 const appPath = vaildParams(argv[argv.length - 1])
 
 export default defineConfig((ctx) => {
-  // 如果提供了应用路径参数，则使用指定路径作为入口
+  const env = loadEnv(ctx.mode, resolve(__dirname), '')
   const customEntry = appPath ? resolve(__dirname, `${appPath}`) : ''
+  const outDir = resolve(__dirname, `dist/${appPath}`)
+  const sharedVendor = readSharedVendorConfig(resolve(__dirname), env)
+  const isDev = ctx.mode === 'development'
+  const isTest = ctx.mode === 'test'
+  const shouldUseLegacy = !isDev
 
   return {
     base: './',
     plugins: [
       vue(),
-      vueDevTools(),
+      isDev && vueDevTools(),
       AutoImportDeps(),
       AutoRegistryComponents(),
       AutoPages(),
       UnoCSS(),
-      legacy(),
-      viteCompression({
-        verbose: true, // 是否在控制台输出压缩结果
-        disable: false, // 是否禁用
-        threshold: 10240, // 体积大于 10KB 的才压缩
-        algorithm: 'gzip', // 压缩算法
-        ext: '.gz', // 文件后缀
-      }),
-      // visualizer({
-      //   open: true, // 打包完成后自动打开分析页面
-      //   filename: `dist/${appPath}/stats.html`, // 生成的分析文件名
-      //   gzipSize: true, // 显示 gzip 后的体积
-      // }),
-    ],
+      isTest && initVConsole(),
+      shouldUseLegacy && legacy(),
+      createSharedVendorPlugin(sharedVendor),
+    ].filter(Boolean),
     resolve: {
       alias: {
         '@': resolve(__dirname, 'common'),
@@ -66,22 +62,27 @@ export default defineConfig((ctx) => {
     },
     css: transformCss(),
     root: ctx.isPreview ? '' : `${appPath}`,
-    envDir: resolve(__dirname), // 强制 Vite 在项目根目录寻找环境文件
+    envDir: resolve(__dirname),
     build: {
-      outDir: resolve(__dirname, `dist/${appPath}`),
+      outDir,
       rollupOptions: {
         input: resolve(customEntry, 'index.html'),
+        external: sharedVendor.external,
         output: {
-          // 这里的优化点：手动拆分大库
           manualChunks: (id) => {
-            if (id.includes('node_modules')) {
-              const name = id.toString().split('node_modules/')[1].split('/')[1]
-              if (name.includes('vue-i18n')) return 'vendor-vue-i18n'
-              if (name.includes('vue')) return 'vendor-vue'
-              return 'vendor' // 其他第三方库
-            }
+            if (!id.includes('node_modules'))
+              return
+
+            const normalizedId = id.replace(/\\/g, '/')
+
+            if (normalizedId.includes('/@sentry/'))
+              return 'vendor-sentry'
+
+            if (normalizedId.includes('/vant/'))
+              return 'vendor-vant'
+
+            return 'vendor'
           },
-          // 用于保持 dist 目录结构整洁
           chunkFileNames: 'static/js/[name]-[hash].js',
           entryFileNames: 'static/js/[name]-[hash].js',
           assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
@@ -95,7 +96,7 @@ export default defineConfig((ctx) => {
     },
 
     preview: {
-      open: true,
+      open: false,
       port: 8888,
     },
   }

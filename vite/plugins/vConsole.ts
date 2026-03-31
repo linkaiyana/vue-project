@@ -1,18 +1,16 @@
 /*
  * @Author: linkaiyan
  * @Date: 2026-01-14 16:07:41
- * @LastEditTime: 2026-01-14 16:12:56
+ * @LastEditTime: 2026-03-31 16:13:07
  * @LastEditors: linkaiyan
  * @Description:
  */
-export default function initVConsole(enable) {
-  return {
-    name: 'vite-plugin-vconsole', // 插件名称
-    // 转换 index.html 的钩子
-    transformIndexHtml(html): string | void {
-      if (!enable) return html
+import type { Plugin } from 'vite'
 
-      // 注入 vConsole 的 CDN 脚本和初始化代码
+export default function initVConsole(): Plugin {
+  return {
+    name: 'vite-plugin-vconsole',
+    transformIndexHtml(html) {
       return {
         html,
         tags: [
@@ -23,7 +21,7 @@ export default function initVConsole(enable) {
           },
           {
             tag: 'script',
-            children: 'var vConsole = new window.VConsole();',
+            children: 'new window.VConsole();',
             injectTo: 'body',
           },
         ],

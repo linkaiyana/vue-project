@@ -1,17 +1,17 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-03 15:00:50
- * @LastEditTime: 2026-03-26 14:12:53
+ * @LastEditTime: 2026-03-30 11:23:04
  * @LastEditors: linkaiyan
  * @Description:
  */
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
-import { isDebug } from '@/constants'
 import creatI18n from '@/plugins/i18n'
 import createSentry from '@/plugins/sentry'
 
 import App from './App.vue'
+import { activityName } from './constants'
 import router from './router'
 
 // reset css
@@ -22,15 +22,7 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(creatI18n)
-app.use(createSentry)
+app.use(createSentry({ activityName }))
 app.use(router)
-
-if (isDebug) {
-  setTimeout(() => {
-    if ('VConsole' in window && window.VConsole) {
-      new (window.VConsole as any)()
-    }
-  }, 2000)
-}
 
 app.mount('#app')

@@ -1,0 +1,27 @@
+{
+  "extends": "./tsconfig.common.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["common/*"],
+      "@CC/*": ["common/components/*"],
+      "@CF/*": ["common/fonts/*"],
+      "@CU/*": ["common/utils/*"],
+      "@CS/*": ["common/store/*"]
+    }
+  },
+  "include": [
+    "common/**/*",
+    "commands/**/*.ts",
+    "vite/**/*.ts",
+    "types/*.d.ts",
+    "vite.config.ts",
+    "uno.config.ts"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "dino/**/*",
+    "common/plugins/i18n.ts"
+  ]
+}

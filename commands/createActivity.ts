@@ -4,6 +4,16 @@ import path from 'node:path'
 import { checkbox, confirm, input, select } from '@inquirer/prompts'
 import pc from 'picocolors'
 
+interface CreateActivityOptions {
+  selectedApp: string
+  folder: string
+  folderName: string
+  activityTitle: string
+  needI18n: boolean
+  targetRelativePath: string
+  selectedLanguages: string[]
+}
+
 async function createActivity() {
   console.warn(pc.cyan('\n🚀 开始创建新活动...\n'))
 
@@ -68,7 +78,9 @@ async function createActivity() {
     console.warn(pc.gray('\n正在处理并生成文件...'))
     fs.mkdirSync(targetPath, { recursive: true })
 
-    const options = {
+    const options: CreateActivityOptions = {
+      selectedApp,
+      folder,
       folderName,
       activityTitle,
       needI18n,
@@ -102,7 +114,7 @@ async function createActivity() {
 }
 
 /** 内容替换 */
-function processFile(sourcePath: string, targetPath: string, fileName: string, options: any) {
+function processFile(sourcePath: string, targetPath: string, fileName: string, options: CreateActivityOptions) {
   const textExtensions = ['.ts', '.js', '.vue', '.json', '.html', '.scss', '.css']
   if (!textExtensions.includes(path.extname(fileName))) {
     fs.copyFileSync(sourcePath, targetPath)
@@ -116,9 +128,10 @@ function processFile(sourcePath: string, targetPath: string, fileName: string, o
       const languagesArrayStr = options.selectedLanguages.length > 0
         ? `[${options.selectedLanguages.map(lang => `'${lang}'`).join(', ')}]`
         : '[]'
+      const activityName = [options.selectedApp, options.folder, options.folderName].join(':')
 
       content = content
-        .replace(/'\{\{FOLDER_NAME\}\}'/g, `'${sourcePath}'`)
+        .replace(/'\{\{FOLDER_NAME\}\}'/g, `'${activityName}'`)
         .replace(/Boolean\('\{\{IS_USE_I18N\}\}'\)/g, String(options.needI18n))
         .replace(/'\{\{LANGUAGES_LIST\}\}'/g, languagesArrayStr)
       break
@@ -146,7 +159,7 @@ function processFile(sourcePath: string, targetPath: string, fileName: string, o
 /**
  * 递归复制
  */
-function copyAndProcessTemplate(source: string, target: string, options: any) {
+function copyAndProcessTemplate(source: string, target: string, options: CreateActivityOptions) {
   const files = fs.readdirSync(source)
   for (const file of files) {
     if (file === 'components') continue
