@@ -1,0 +1,32 @@
+{
+  "vue": {
+    "source": "dist/vue.runtime.esm-browser.prod.js",
+    "fileName": "vue.runtime.esm-browser.prod.js",
+    "format": "esm",
+    "specifier": "vue"
+  },
+  "vue-router": {
+    "source": "dist/vue-router.esm-browser.prod.js",
+    "fileName": "vue-router.esm-browser.prod.js",
+    "format": "esm",
+    "specifier": "vue-router"
+  },
+  "vue-i18n": {
+    "source": "dist/vue-i18n.runtime.esm-browser.prod.js",
+    "fileName": "vue-i18n.runtime.esm-browser.prod.js",
+    "format": "esm",
+    "specifier": "vue-i18n"
+  },
+  "svga": {
+    "source": "dist/index.esm.min.js",
+    "fileName": "index.esm.min.js",
+    "format": "esm",
+    "specifier": "svga"
+  },
+  "pinia": {
+    "source": "dist/pinia.iife.prod.js",
+    "fileName": "pinia.iife.prod.js",
+    "format": "global",
+    "global": "Pinia"
+  }
+}

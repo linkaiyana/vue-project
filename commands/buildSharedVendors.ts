@@ -5,10 +5,9 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import pc from 'picocolors'
 
-type SharedVendorName = 'vue' | 'vue-router' | 'vue-i18n' | 'svga' | 'pinia'
 type SharedVendorFormat = 'esm' | 'global'
 
-interface SharedVendorConfig {
+interface SharedVendorManifestSourceItem {
   source: string
   fileName: string
   format: SharedVendorFormat
@@ -16,59 +15,29 @@ interface SharedVendorConfig {
   global?: string
 }
 
-interface SharedVendorManifestItem {
+interface SharedVendorManifestRuntimeItem extends SharedVendorManifestSourceItem {
   version: string
-  fileName: string
   path: string
   size: number
   sha256: string
-  format: SharedVendorFormat
-  specifier?: string
-  global?: string
 }
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const projectRoot = path.resolve(__dirname, '..')
-const outputRoot = path.resolve(projectRoot, '.shared-dist')
-const outputDir = path.join(outputRoot, 'vendor')
+const outputDir = path.resolve(projectRoot, 'dist/vendor')
+const manifestSourcePath = path.resolve(projectRoot, 'sharedVendor.manifest.json')
 const remotePrefix = normalizePath(process.env.SHARED_VENDOR_REMOTE_PREFIX || 'shared/vendor')
-
-const sharedVendorConfigs: Record<SharedVendorName, SharedVendorConfig> = {
-  'vue': {
-    source: 'dist/vue.runtime.esm-browser.prod.js',
-    fileName: 'vue.runtime.esm-browser.prod.js',
-    format: 'esm',
-    specifier: 'vue',
-  },
-  'vue-router': {
-    source: 'dist/vue-router.esm-browser.prod.js',
-    fileName: 'vue-router.esm-browser.prod.js',
-    format: 'esm',
-    specifier: 'vue-router',
-  },
-  'vue-i18n': {
-    source: 'dist/vue-i18n.runtime.esm-browser.prod.js',
-    fileName: 'vue-i18n.runtime.esm-browser.prod.js',
-    format: 'esm',
-    specifier: 'vue-i18n',
-  },
-  'svga': {
-    source: 'dist/index.esm.min.js',
-    fileName: 'index.esm.min.js',
-    format: 'esm',
-    specifier: 'svga',
-  },
-  'pinia': {
-    source: 'dist/pinia.iife.prod.js',
-    fileName: 'pinia.iife.prod.js',
-    format: 'global',
-    global: 'Pinia',
-  },
-}
 
 function normalizePath(value: string) {
   return value.replace(/\\/g, '/').replace(/^\/+|\/+$/g, '')
+}
+
+function readManifestSource() {
+  if (!existsSync(manifestSourcePath))
+    throw new Error(`Missing shared vendor manifest source: ${manifestSourcePath}`)
+
+  return JSON.parse(readFileSync(manifestSourcePath, 'utf-8')) as Record<string, SharedVendorManifestSourceItem>
 }
 
 function resolvePackageRoot(packageName: string) {
@@ -93,14 +62,15 @@ function sha256(filePath: string) {
 }
 
 function prepareOutputDirectory() {
-  rmSync(outputRoot, { recursive: true, force: true })
+  rmSync(outputDir, { recursive: true, force: true })
   mkdirSync(outputDir, { recursive: true })
 }
 
-function buildManifest() {
-  const manifest: Record<string, SharedVendorManifestItem> = {}
+function buildSharedVendors() {
+  const manifestSource = readManifestSource()
+  const runtimeManifest: Record<string, SharedVendorManifestRuntimeItem> = {}
 
-  for (const [packageName, config] of Object.entries(sharedVendorConfigs) as Array<[SharedVendorName, SharedVendorConfig]>) {
+  for (const [packageName, config] of Object.entries(manifestSource)) {
     const version = readPackageVersion(packageName)
     const packageRoot = resolvePackageRoot(packageName)
     const sourcePath = path.join(packageRoot, config.source)
@@ -116,15 +86,12 @@ function buildManifest() {
     const size = readFileSync(outputFilePath).byteLength
     const remotePath = `${remotePrefix}/${packageName}/${version}/${config.fileName}`
 
-    manifest[packageName] = {
+    runtimeManifest[packageName] = {
+      ...config,
       version,
-      fileName: config.fileName,
       path: remotePath,
       size,
       sha256: sha256(outputFilePath),
-      format: config.format,
-      specifier: config.specifier,
-      global: config.global,
     }
 
     console.warn(
@@ -132,15 +99,15 @@ function buildManifest() {
     )
   }
 
-  const manifestPath = path.join(outputDir, 'manifest.json')
-  writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf-8')
-  console.warn(`${pc.green('√')} manifest -> ${pc.cyan(normalizePath(path.relative(projectRoot, manifestPath)))}`)
+  const runtimeManifestPath = path.join(outputDir, 'manifest.json')
+  writeFileSync(runtimeManifestPath, `${JSON.stringify(runtimeManifest, null, 2)}\n`, 'utf-8')
+  console.warn(`${pc.green('√')} manifest -> ${pc.cyan(normalizePath(path.relative(projectRoot, runtimeManifestPath)))}`)
 }
 
 function main() {
   console.warn(pc.cyan('\nBuilding shared vendor assets...\n'))
   prepareOutputDirectory()
-  buildManifest()
+  buildSharedVendors()
   console.warn(pc.green(`\nShared vendor assets are ready in ${normalizePath(path.relative(projectRoot, outputDir))}\n`))
 }
 
