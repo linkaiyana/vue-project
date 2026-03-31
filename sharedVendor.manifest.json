@@ -12,8 +12,8 @@
     "specifier": "vue-router"
   },
   "vue-i18n": {
-    "source": "dist/vue-i18n.runtime.esm-browser.prod.js",
-    "fileName": "vue-i18n.runtime.esm-browser.prod.js",
+    "source": "dist/vue-i18n.esm-browser.prod.js",
+    "fileName": "vue-i18n.esm-browser.prod.js",
     "format": "esm",
     "specifier": "vue-i18n"
   },
