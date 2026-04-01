@@ -19,6 +19,7 @@ declare module 'vue' {
     Picture: typeof import('./../../../../common/components/Picture.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SVGAPlayer: typeof import('./../../../../common/components/SVGAPlayer.vue')['default']
     VanButton: typeof import('vant/es')['Button']
   }
 }
