@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-02 15:01:44
- * @LastEditTime: 2026-03-31 16:13:13
+ * @LastEditTime: 2026-04-01 17:26:43
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -27,13 +27,14 @@ export default defineConfig((ctx) => {
   const env = loadEnv(ctx.mode, resolve(__dirname), '')
   const customEntry = appPath ? resolve(__dirname, `${appPath}`) : ''
   const outDir = resolve(__dirname, `dist/${appPath}`)
+  const activityBase = appPath ? `/${appPath.replace(/\\/g, '/')}/` : '/'
   const sharedVendor = readSharedVendorConfig(resolve(__dirname), env)
   const isDev = ctx.mode === 'development'
   const isTest = ctx.mode === 'test'
   const shouldUseLegacy = !isDev
 
   return {
-    base: './',
+    base: activityBase,
     assetsInclude: ['**/*.svga'],
     plugins: [
       vue(),
