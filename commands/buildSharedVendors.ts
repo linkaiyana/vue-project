@@ -8,6 +8,7 @@ import pc from 'picocolors'
 type SharedVendorFormat = 'esm' | 'global'
 
 interface SharedVendorManifestSourceItem {
+  version: string
   source: string
   fileName: string
   format: SharedVendorFormat
@@ -51,6 +52,17 @@ function readPackageVersion(packageName: string) {
   return packageJson.version
 }
 
+function resolveConfiguredVersion(packageName: string, configuredVersion: string) {
+  const installedVersion = readPackageVersion(packageName)
+  if (installedVersion !== configuredVersion) {
+    throw new Error(
+      `Shared vendor version mismatch for ${packageName}: manifest=${configuredVersion}, installed=${installedVersion}. Update sharedVendor.manifest.json or reinstall dependencies.`,
+    )
+  }
+
+  return configuredVersion
+}
+
 function ensureFileExists(filePath: string, label: string) {
   if (!existsSync(filePath))
     throw new Error(`Missing ${label}: ${filePath}`)
@@ -71,7 +83,7 @@ function buildSharedVendors() {
   const runtimeManifest: Record<string, SharedVendorManifestRuntimeItem> = {}
 
   for (const [packageName, config] of Object.entries(manifestSource)) {
-    const version = readPackageVersion(packageName)
+    const version = resolveConfiguredVersion(packageName, config.version)
     const packageRoot = resolvePackageRoot(packageName)
     const sourcePath = path.join(packageRoot, config.source)
 

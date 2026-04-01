@@ -11,10 +11,10 @@
     "dev": "vite --",
     "dev:test": "vite --mode test --",
     "dev:prod": "vite --mode production --",
-    "build:shared": "esno ./commands/buildSharedVendors.ts",
     "check": "esno ./commands/customScripts.ts check",
     "build": "esno ./commands/customScripts.ts build",
     "build:test": "esno ./commands/customScripts.ts build:test",
+    "build:shared": "esno ./commands/buildSharedVendors.ts",
     "lint": "eslint .  --cache",
     "lint:fix": "eslint . --fix --cache",
     "lint:project": "esno ./commands/customScripts.ts lint",
@@ -28,12 +28,12 @@
     "@inquirer/prompts": "^8.1.0",
     "@sentry/vue": "^10.46.0",
     "pinia": "^3.0.4",
-    "svga": "^2.1.1",
+    "svga": "2.1.1",
     "unplugin-auto-import": "^20.3.0",
     "vant": "^4.9.22",
-    "vue": "^3.5.25",
-    "vue-i18n": "^11.2.7",
-    "vue-router": "^4.6.3"
+    "vue": "3.5.25",
+    "vue-i18n": "11.2.7",
+    "vue-router": "4.6.3"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.7.3",

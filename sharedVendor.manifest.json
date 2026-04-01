@@ -26,12 +26,5 @@
     "fileName": "index.esm.min.js",
     "format": "esm",
     "specifier": "svga"
-  },
-  "pinia": {
-    "version": "3.0.4",
-    "source": "dist/pinia.iife.prod.js",
-    "fileName": "pinia.iife.prod.js",
-    "format": "global",
-    "global": "Pinia"
   }
 }

@@ -6,6 +6,7 @@ import { resolve } from 'node:path'
 type SharedVendorFormat = 'esm' | 'global'
 
 interface SharedVendorManifestSourceItem {
+  version: string
   source: string
   fileName: string
   format: SharedVendorFormat
@@ -43,6 +44,17 @@ function readPackageVersion(packageName: string) {
   return packageJson.version
 }
 
+function resolveConfiguredVersion(packageName: string, configuredVersion: string) {
+  const installedVersion = readPackageVersion(packageName)
+  if (installedVersion !== configuredVersion) {
+    throw new Error(
+      `Shared vendor version mismatch for ${packageName}: manifest=${configuredVersion}, installed=${installedVersion}. Update sharedVendor.manifest.json or reinstall dependencies.`,
+    )
+  }
+
+  return configuredVersion
+}
+
 function readSharedVendorConfig(projectRoot: string, env: Record<string, string>) {
   const manifestSource = readManifestSource(projectRoot)
   const sharedVendorBaseUrl = normalizePath(env.VITE_SHARED_VENDOR_BASE_URL || process.env.VITE_SHARED_VENDOR_BASE_URL || '')
@@ -63,7 +75,7 @@ function readSharedVendorConfig(projectRoot: string, env: Record<string, string>
   const esmEntries = Object.entries(manifestSource)
     .map(([packageName, config]) => ({
       packageName,
-      version: readPackageVersion(packageName),
+      version: resolveConfiguredVersion(packageName, config.version),
       ...config,
     }))
     .filter(item => item.format === 'esm' && item.specifier)
