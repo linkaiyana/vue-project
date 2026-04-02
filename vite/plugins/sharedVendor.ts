@@ -75,8 +75,8 @@ function readSharedVendorConfig(projectRoot: string, env: Record<string, string>
   const esmEntries = Object.entries(manifestSource)
     .map(([packageName, config]) => ({
       packageName,
-      version: resolveConfiguredVersion(packageName, config.version),
       ...config,
+      version: resolveConfiguredVersion(packageName, config.version),
     }))
     .filter(item => item.format === 'esm' && item.specifier)
 
