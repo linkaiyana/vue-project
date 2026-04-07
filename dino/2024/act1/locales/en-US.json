@@ -1,5 +1,14 @@
 {
-  "txt1": "1ssssssssssssssss",
-  "txt2": "1dddddddddddddddd"
-
+  "global": {
+    "noDataText": "No data~",
+    "lowBalanceText": "Insufficient balance. Please recharge.",
+    "vanListLoadingText": "Loading…",
+    "vanListFinishedText": "Nothing...",
+    "vanCalendarStart": "start",
+    "vanCalendarEnd": "Finish",
+    "vanCalendarTitle": "date selection",
+    "vanCalendarConfirmText": "Sure",
+    "vanCalendarConfirmDisabledText": "Please select end time",
+    "loadingText": "System processing. Do not click again."
+  }
 }

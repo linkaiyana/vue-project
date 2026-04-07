@@ -1,4 +1,14 @@
 {
-  "txt1": "2ssssssssssssssss",
-  "txt2": "2dddddddddddddddd"
+  "global": {
+    "noDataText": "当前暂无数据~",
+    "lowBalanceText": "余额不足，请充值",
+    "vanListLoadingText": "加载中…",
+    "vanListFinishedText": "没有了哦…",
+    "vanCalendarStart": "开始",
+    "vanCalendarEnd": "结束",
+    "vanCalendarTitle": "日期选择",
+    "vanCalendarConfirmText": "确定",
+    "vanCalendarConfirmDisabledText": "请选择结束时间",
+    "loadingText": "系统处理中，请勿重复点击"
+  }
 }

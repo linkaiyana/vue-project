@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2026-03-17 17:38:29
- * @LastEditTime: 2026-04-02 09:53:10
+ * @LastEditTime: 2026-04-07 18:28:48
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -42,7 +42,7 @@ async function generateSheetFile() {
   const allLanguages = response.data.values?.[0] || []
   const allContents = response.data.values?.slice(1) || []
 
-  const ctns = allContents.filter(item => item[0] === appPath)
+  const ctns = allContents.filter(item => item[0] === appPath || item[0] === 'global')
 
   let targetLanguages: string[] | null = null
   const constantsPath = path.join(process.cwd(), appPath, 'constants.ts')
@@ -82,15 +82,27 @@ async function generateSheetFile() {
       return
     }
 
-    const langData: Record<string, string> = {}
+    const langData: Record<string, any> = {}
+    const globalData: Record<string, string> = {}
 
     ctns.forEach((row) => {
+      const source = row[0]
       const key = row[1]
       const value = row[langIndex]
+
       if (key && value !== undefined) {
-        langData[key] = value
+        if (source === 'global') {
+          globalData[key] = value
+        }
+        else {
+          langData[key] = value
+        }
       }
     })
+
+    if (Object.keys(globalData).length > 0) {
+      langData.global = globalData
+    }
 
     const filePath = path.join(localesDir, `${langCode}.json`)
     fs.writeFileSync(filePath, JSON.stringify(langData, null, 2), 'utf-8')

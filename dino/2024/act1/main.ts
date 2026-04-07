@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-03 15:00:50
- * @LastEditTime: 2026-04-07 00:00:00
+ * @LastEditTime: 2026-04-07 16:20:36
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -16,16 +16,15 @@ import router from './router'
 import '@unocss/reset/tailwind.css'
 import 'virtual:uno.css'
 
-const pinia = createPinia()
 const app = createApp(App)
 
-app.use(pinia)
+app.use(createPinia())
 app.use(creatI18n)
 app.use(createSentry({ activityName }))
 app.use(router)
 
 function init() {
-  const clientStore = useClientStore(pinia)
+  const clientStore = useClientStore()
   clientStore.getClientInfo()
 }
 
