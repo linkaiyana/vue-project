@@ -25,4 +25,8 @@ export interface RequestConfig<D = unknown> extends AxiosRequestConfig<D> {
   rawResponse?: boolean
 }
 
+export interface RawResponseRequestConfig<D = unknown> extends RequestConfig<D> {
+  rawResponse: true
+}
+
 export type RequestMeta = Pick<RequestConfig, 'silent' | 'rawResponse'>

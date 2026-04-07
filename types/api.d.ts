@@ -33,3 +33,17 @@ type BasicPostParams<T = object> = { amount: number, id: number } & T
 
 /** 解构接口后的返回数据 */
 type ApiReseType<T> = Awaited<ReturnType<T>>[number]
+
+interface GiveEntity {
+  rewardId: number
+  rewardName: string
+  rewardIcon: string
+  rewardParam: string
+  giveType: number
+  amount: number
+  worth: number
+  unit: UnitType
+  singleEffectiveTime: number
+  showOnMsg: boolean
+  count: number
+}

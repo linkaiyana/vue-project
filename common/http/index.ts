@@ -1,11 +1,13 @@
 import type {
   AxiosError,
   AxiosInstance,
-  AxiosRequestConfig,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios'
-import type { BusinessResponse, HttpContext, RequestConfig, RequestMeta } from './types'
+import type {
+  HttpContext,
+  RequestConfig,
+} from './types'
 import axios from 'axios'
 import { showToast } from 'vant'
 import useClientStore from '@/store/clientStore'
@@ -34,7 +36,7 @@ function resolveBaseURL(context?: HttpContext | null) {
 }
 
 function resolveHeaders(context?: HttpContext | null): Record<string, unknown> {
-  if (!context?.isApp) {
+  if (!context) {
     return APP_HEADERS
   }
 
@@ -53,18 +55,16 @@ function resolveHeaders(context?: HttpContext | null): Record<string, unknown> {
 
 function onRequest(config: InternalAxiosRequestConfig) {
   const context = getHttpContext()
-
   config.baseURL = resolveBaseURL(context)
   config.headers = axios.AxiosHeaders.from({
     ...(config.headers ? config.headers.toJSON() : {}),
     ...resolveHeaders(context),
   } as any)
-
   return config
 }
 
-function onResponse<T>(response: AxiosResponse<BusinessResponse<T>>) {
-  const meta = response.config as AxiosRequestConfig & RequestMeta
+function onResponse<T>(response: AxiosResponse) {
+  const meta = response.config as RequestConfig
 
   if (response.status !== HTTP_SUCCESS_STATUS) {
     const errorMessage = `请求异常：${response.status}`
@@ -88,11 +88,11 @@ function onResponse<T>(response: AxiosResponse<BusinessResponse<T>>) {
     return Promise.reject(new Error(errorMessage))
   }
 
-  return response
+  return (meta?.rawResponse ? response.data : response.data.data) as T
 }
 
-function onResponseError(error: AxiosError<BusinessResponse>) {
-  const meta = error.config as (AxiosRequestConfig & RequestMeta) | undefined
+function onResponseError(error: AxiosError) {
+  const meta = error.config as RequestConfig | undefined
 
   if (!meta?.silent) {
     showToast({
@@ -112,32 +112,23 @@ instance.interceptors.response.use(onResponse, onResponseError)
 export function request<T = unknown, D = unknown>(
   url: string,
   config: RequestConfig<D> = {},
-) {
-  return instance.request<BusinessResponse<T>, AxiosResponse<BusinessResponse<T>>, D>({
-    url,
+): Promise<T> {
+  return instance(url, {
     method: config.method || 'GET',
     ...config,
-  }).then((response) => {
-    return config.rawResponse ? response.data : response.data.data
   })
 }
 
 export const http = {
-  get<T = unknown>(url: string, config?: RequestConfig) {
-    return request<T>(url, { ...config, method: 'GET' })
-  },
+  get: <T = any>(url: string, config?: RequestConfig) =>
+    request<T>(url, { ...config, method: 'GET' }),
 
-  post<T = unknown, D = unknown>(url: string, data?: D, config?: RequestConfig<D>) {
-    return request<T, D>(url, { ...config, method: 'POST', data })
-  },
+  post: <T = any>(url: string, data?: any, config?: RequestConfig) =>
+    request<T>(url, { ...config, method: 'POST', data }),
 
-  put<T = unknown, D = unknown>(url: string, data?: D, config?: RequestConfig<D>) {
-    return request<T, D>(url, { ...config, method: 'PUT', data })
-  },
+  put: <T = any>(url: string, data?: any, config?: RequestConfig) =>
+    request<T>(url, { ...config, method: 'PUT', data }),
 
-  delete<T = unknown>(url: string, config?: RequestConfig) {
-    return request<T>(url, { ...config, method: 'DELETE' })
-  },
+  delete: <T = any>(url: string, config?: RequestConfig) =>
+    request<T>(url, { ...config, method: 'DELETE' }),
 }
-
-export type { BusinessResponse, HttpContext, RequestConfig } from './types'
