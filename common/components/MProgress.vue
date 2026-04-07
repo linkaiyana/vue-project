@@ -1,22 +1,23 @@
 <script setup lang='ts' generic="T extends Record<string, any>">
-const props = withDefaults(defineProps<ProgressData<T>>(), {
-  // list: () => [],
-  // cur: 0,
+type AllowedPointFields<T> = keyof T | 'point'
+
+interface ProgressData {
+  list?: T[]
+  cur?: number
+  showLast?: boolean
+  vertical?: boolean
+  pointField?: AllowedPointFields<T>
+}
+
+const props = withDefaults(defineProps<ProgressData>(), {
+  list: () => [],
+  cur: 0,
   showLast: false,
   vertical: false,
+  pointField: 'point',
 })
 
 const emits = defineEmits(['handlePoint', 'progressDone'])
-
-type AllowedPointFields<T> = keyof T | 'point'
-
-interface ProgressData<T> {
-  list: T[]
-  cur: number
-  showLast?: boolean
-  vertical?: boolean
-  pointField: AllowedPointFields<T>
-}
 
 const progressList = computed(() => props.list || [])
 
@@ -111,17 +112,17 @@ watch([() => props.cur, () => props.list], async ([point, list]) => {
           <div class="progressStar" :class="{ highlight: cur >= getPointValue(item) }" @click="emits('handlePoint', index)">
             <!-- 星星 -->
             <div class="star">
-              <slot name="star" :active="cur >= getPointValue(item)" :data="item" />
+              <slot name="star" :active="cur >= getPointValue(item)" :data="item" :index="index" />
             </div>
 
             <!-- 进度点上方插槽 -->
             <div class="progressSlot1">
-              <slot name="ctn1" :data="item" :active="cur >= getPointValue(item)" />
+              <slot name="ctn1" :data="item" :index="index" :active="cur >= getPointValue(item)" />
             </div>
 
             <!-- 进度点下方插槽 -->
             <div class="progressSlot2">
-              <slot name="ctn2" :data="item" :active="cur >= getPointValue(item)" />
+              <slot name="ctn2" :data="item" :index="index" :active="cur >= getPointValue(item)" />
             </div>
           </div>
         </div>

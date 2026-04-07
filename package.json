@@ -44,6 +44,8 @@
   "dependencies": {
     "@inquirer/prompts": "^8.1.0",
     "@sentry/vue": "^10.46.0",
+    "axios": "^1.14.0",
+    "dayjs": "^1.11.20",
     "pinia": "^3.0.4",
     "svga": "2.1.1",
     "unplugin-auto-import": "^20.3.0",
@@ -72,6 +74,7 @@
     "fontmin": "^1.1.1",
     "googleapis": "^168.0.0",
     "jiti": "^2.6.1",
+    "lint-staged": "^16.2.7",
     "npm-run-all2": "^8.0.4",
     "ora": "^9.0.0",
     "picocolors": "^1.1.1",
@@ -86,7 +89,6 @@
     "vite": "^7.2.4",
     "vite-plugin-pages": "^0.33.2",
     "vite-plugin-vue-devtools": "^8.0.5",
-    "vue-tsc": "^3.1.5",
-    "lint-staged": "^16.2.7"
+    "vue-tsc": "^3.1.5"
   }
 }

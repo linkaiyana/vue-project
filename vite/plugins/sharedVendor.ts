@@ -5,7 +5,7 @@ import { resolve } from 'node:path'
 
 type SharedVendorFormat = 'esm' | 'global'
 
-interface SharedVendorManifestSourceItem {
+export interface SharedVendorManifestSourceItem {
   version: string
   source: string
   fileName: string
@@ -14,7 +14,7 @@ interface SharedVendorManifestSourceItem {
   global?: string
 }
 
-interface SharedVendorRuntimeConfig {
+export interface SharedVendorRuntimeConfig {
   enabled: boolean
   external: string[]
   importMap: Record<string, string>
