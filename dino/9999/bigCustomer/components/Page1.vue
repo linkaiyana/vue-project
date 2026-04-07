@@ -1,7 +1,7 @@
 <!--
  * @Author: linkaiyan
  * @Date: 2025-10-24 09:59:55
- * @LastEditTime: 2026-04-07 15:17:34
+ * @LastEditTime: 2026-04-07 18:12:56
  * @LastEditors: linkaiyan
  * @Description:
 -->
@@ -436,7 +436,7 @@ onActivated(() => {
         top: -10px;
         width: 36px;
         height: 40px;
-        background: url('../assets/icon/icon-flower.png') no-repeat center / 100%;
+        background: url('@PF/assets/icon/icon-flower.png') no-repeat center / 100%;
       }
 
       &::before {

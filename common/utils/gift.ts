@@ -1,11 +1,10 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-10-31 10:55:25
- * @LastEditTime: 2026-04-03 15:48:37
+ * @LastEditTime: 2026-04-07 18:11:07
  * @LastEditors: linkaiyan
  * @Description:
  */
-import { useI18n } from 'vue-i18n'
 
 enum UnitType {
   FOREVER = -1,
@@ -40,12 +39,10 @@ function getGiftUnit<T extends Gift = Gift>({
     unit: keyof T
   }>
 }) {
-  const { t } = useI18n()
-
   const unitMap = {
     [UnitType.FOREVER]: '',
-    [UnitType.HOURS]: t('unit.hours'),
-    [UnitType.DAY]: t('unit.days'),
+    [UnitType.HOURS]: 'h',
+    [UnitType.DAY]: 'd',
   }
 
   if (showAmountTypeList.includes(gift[type])) {

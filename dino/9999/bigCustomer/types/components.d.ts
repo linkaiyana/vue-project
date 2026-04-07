@@ -12,7 +12,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ActiveHeader: typeof import('./../../../../common/components/ActiveHeader.vue')['default']
-    AvatarIcon: typeof import('./../components/AvatarIcon.vue')['default']
+    AvatarIcon: typeof import('./../../../../common/components/AvatarIcon.vue')['default']
     BoxCustomBg: typeof import('./../../../../common/components/BoxCustomBg.vue')['default']
     Calendar: typeof import('./../components/Calendar.vue')['default']
     CommonBtn: typeof import('./../../../../common/components/CommonBtn.vue')['default']

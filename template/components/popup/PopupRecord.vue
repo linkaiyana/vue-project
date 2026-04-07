@@ -1,7 +1,7 @@
 <!--
  * @Author: linkaiyan
  * @Date: 2025-10-29 14:54:16
- * @LastEditTime: 2026-04-07 16:56:27
+ * @LastEditTime: 2026-04-07 16:59:08
  * @LastEditors: linkaiyan
  * @Description: 购买记录
 -->
@@ -9,11 +9,11 @@
 import dayjs from 'dayjs'
 import useListHooks from '@/hooks/useList.ts'
 import { listBuyRecord } from '../../api'
-import PopupCommon from './PopupCommon.vue'
 
 const show = defineModel('show', { default: false })
 
-const { pageMsg, list, getList, reset } = useListHooks<BuyRecord, BuyRecordRes>()
+// TODO, type
+const { pageMsg, list, getList, reset } = useListHooks<any, any>()
 
 async function getRecord() {
   pageMsg.loading = true
@@ -21,7 +21,8 @@ async function getRecord() {
     api: listBuyRecord,
     name: 'records',
     formatList: (res) => {
-      res.records.forEach((item) => {
+      // TODO, type
+      res.records.forEach((item: any) => {
         item.time = dayjs(item.createTime).format('M/D HH:mm:ss')
       })
     },
@@ -133,7 +134,7 @@ watch(show, (val) => {
         width: 32px;
         height: 32px;
         margin-right: 5px;
-        background: url('../../assets/icon/icon-diamond.png') no-repeat center / 100% 100%;
+        background: url('@/assets/images/ic_diamond_dino.png') no-repeat center / 100% 100%;
       }
     }
   }

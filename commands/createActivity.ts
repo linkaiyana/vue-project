@@ -12,6 +12,74 @@ interface CreateActivityOptions {
   needI18n: boolean
   targetRelativePath: string
   selectedLanguages: string[]
+  selectedComponents: string[]
+}
+
+function getTemplateComponents(dir = path.join('template', 'components'), baseDir = dir) {
+  if (!fs.existsSync(dir))
+    return []
+
+  const result: Array<{ name: string, value: string, checked: false }> = []
+
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = path.join(dir, entry.name)
+    const relativePath = path.relative(baseDir, fullPath).replace(/\\/g, '/')
+
+    if (entry.isDirectory()) {
+      result.push(...getTemplateComponents(fullPath, baseDir))
+    }
+    else {
+      result.push({
+        name: relativePath,
+        value: relativePath,
+        checked: false,
+      })
+    }
+  }
+
+  return result
+}
+
+function copyDirectory(source: string, target: string) {
+  fs.mkdirSync(target, { recursive: true })
+  for (const entry of fs.readdirSync(source, { withFileTypes: true })) {
+    const sourcePath = path.join(source, entry.name)
+    const targetPath = path.join(target, entry.name)
+
+    if (entry.isDirectory()) {
+      copyDirectory(sourcePath, targetPath)
+    }
+    else {
+      fs.copyFileSync(sourcePath, targetPath)
+    }
+  }
+}
+
+function copySelectedComponents(targetPath: string, selectedComponents: string[]) {
+  if (!selectedComponents.length)
+    return
+
+  const sourceRoot = path.join('template', 'components')
+  const targetRoot = path.join(targetPath, 'components')
+
+  fs.mkdirSync(targetRoot, { recursive: true })
+
+  for (const componentPath of selectedComponents) {
+    const sourcePath = path.join(sourceRoot, componentPath)
+    const targetComponentPath = path.join(targetRoot, componentPath)
+
+    if (!fs.existsSync(sourcePath))
+      continue
+
+    const stat = fs.statSync(sourcePath)
+    if (stat.isDirectory()) {
+      copyDirectory(sourcePath, targetComponentPath)
+    }
+    else {
+      fs.mkdirSync(path.dirname(targetComponentPath), { recursive: true })
+      fs.copyFileSync(sourcePath, targetComponentPath)
+    }
+  }
 }
 
 async function createActivity() {
@@ -47,7 +115,10 @@ async function createActivity() {
   })
 
   const folder = folderChoice === 'new'
-    ? await input({ message: pc.blue('请输入新目录名:'), validate: v => v.trim() ? true : '必填' })
+    ? await input({
+        message: pc.blue('请输入新目录名'),
+        validate: v => v.trim() ? true : '必填',
+      })
     : folderChoice
 
   const targetPath = path.join(selectedApp, folder, folderName)
@@ -56,7 +127,9 @@ async function createActivity() {
     process.exit(1)
   }
 
-  const needI18n = await confirm({ message: pc.blue('是否启用 i18n 国际化？') })
+  const needI18n = await confirm({
+    message: pc.blue('是否启用 i18n 国际化？'),
+  })
 
   let selectedLanguages: string[] = []
   if (needI18n) {
@@ -74,6 +147,15 @@ async function createActivity() {
   }
 
   // --- 2. 生成阶段 ---
+  const templateComponents = getTemplateComponents()
+  const selectedComponents = templateComponents.length
+    ? await checkbox({
+        message: pc.blue('请选择活动模板组件:'),
+        choices: templateComponents,
+        required: false,
+      })
+    : []
+
   try {
     console.warn(pc.gray('\n正在处理并生成文件...'))
     fs.mkdirSync(targetPath, { recursive: true })
@@ -86,22 +168,25 @@ async function createActivity() {
       needI18n,
       targetRelativePath: targetPath,
       selectedLanguages,
+      selectedComponents,
     }
 
     const activityName = [options.selectedApp, options.folder, options.folderName].join(':')
 
     copyAndProcessTemplate('template', targetPath, options)
+    copySelectedComponents(targetPath, selectedComponents)
 
     console.warn(`\n${pc.green('─'.repeat(45))}`)
     console.warn(pc.green('✨ 活动创建成功！'))
     console.warn(`${pc.bold('📂 目录路径:')} ${pc.cyan(targetPath)}`)
     console.warn(`${pc.bold('🏷️  页面标题:')} ${pc.cyan(activityTitle)}`)
     console.warn(`${pc.bold('🌍 国际化:')}   ${needI18n ? pc.green(`已启用 (${selectedLanguages.join(', ')})`) : pc.gray('未启用')}`)
+    console.warn(`${pc.bold('🧩 模板组件:')} ${selectedComponents.length ? pc.green(selectedComponents.join(', ')) : pc.gray('未选择')}`)
     console.warn(`${pc.green('─'.repeat(45))}\n`)
 
     // --- 3. 运行询问 ---
     const shouldRun = await confirm({
-      message: pc.yellow(`是否立即运行该活动？(pnpm dev ${targetPath})`),
+      message: pc.yellow(`是否立即运行该活动？(pnpm dev ${activityName})`),
       default: true,
     })
 
@@ -156,6 +241,7 @@ function processFile(sourcePath: string, targetPath: string, fileName: string, o
       break
     }
   }
+
   fs.writeFileSync(targetPath, content, 'utf-8')
 }
 /**
@@ -164,11 +250,15 @@ function processFile(sourcePath: string, targetPath: string, fileName: string, o
 function copyAndProcessTemplate(source: string, target: string, options: CreateActivityOptions) {
   const files = fs.readdirSync(source)
   for (const file of files) {
-    if (file === 'components') continue
+    if (file === 'components')
+      continue
+
     const sourcePath = path.join(source, file)
     const targetPath = path.join(target, file)
+
     if (fs.statSync(sourcePath).isDirectory()) {
-      if (!fs.existsSync(targetPath)) fs.mkdirSync(targetPath, { recursive: true })
+      if (!fs.existsSync(targetPath))
+        fs.mkdirSync(targetPath, { recursive: true })
       copyAndProcessTemplate(sourcePath, targetPath, options)
     }
     else {
