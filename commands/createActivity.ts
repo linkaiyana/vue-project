@@ -88,6 +88,8 @@ async function createActivity() {
       selectedLanguages,
     }
 
+    const activityName = [options.selectedApp, options.folder, options.folderName].join(':')
+
     copyAndProcessTemplate('template', targetPath, options)
 
     console.warn(`\n${pc.green('─'.repeat(45))}`)
@@ -105,7 +107,7 @@ async function createActivity() {
 
     if (shouldRun) {
       console.warn(pc.cyan(`\n🚀 启动服务中...\n`))
-      spawn('pnpm', ['dev', targetPath], { stdio: 'inherit', shell: true })
+      spawn('pnpm', ['dev', activityName], { stdio: 'inherit', shell: true })
     }
   }
   catch (err) {
