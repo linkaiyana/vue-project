@@ -1,11 +1,12 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-03 15:00:50
- * @LastEditTime: 2026-04-08 15:39:57
+ * @LastEditTime: 2026-04-08 16:08:17
  * @LastEditors: linkaiyan
  * @Description:
  */
 import { createPinia } from 'pinia'
+import { Lazyload } from 'vant'
 import { createApp } from 'vue'
 // <% if (needI18n) %>
 import creatI18n from '@/plugins/i18n'
@@ -26,6 +27,7 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(createSentry({ activityName }))
 app.use(router)
+app.use(Lazyload)
 
 function init() {
   const clientStore = useClientStore()

@@ -1,11 +1,12 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-03 15:00:50
- * @LastEditTime: 2026-04-07 14:51:03
+ * @LastEditTime: 2026-04-08 16:07:54
  * @LastEditors: linkaiyan
  * @Description:
  */
 import { createPinia } from 'pinia'
+import { Lazyload } from 'vant'
 import { createApp } from 'vue'
 import useClientStore from '@/store/clientStore'
 
@@ -21,6 +22,7 @@ const app = createApp(App)
 const pinia = createPinia()
 app.use(pinia)
 app.use(router)
+app.use(Lazyload)
 
 function init() {
   const clientStore = useClientStore()
