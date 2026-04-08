@@ -44,6 +44,7 @@ declare module 'vue' {
     SVGAPlayer: typeof import('./../../../../common/components/SVGAPlayer.vue')['default']
     UserCard: typeof import('./../components/UserCard.vue')['default']
     VanCountDown: typeof import('vant/es')['CountDown']
+    VanImage: typeof import('vant/es')['Image']
     VanList: typeof import('vant/es')['List']
     VanOverlay: typeof import('vant/es')['Overlay']
     VanStepper: typeof import('vant/es')['Stepper']

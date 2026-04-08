@@ -1,4 +1,15 @@
+<!--
+ * @Author: linkaiyan
+ * @Date: 2026-04-03 14:29:32
+ * @LastEditTime: 2026-04-08 14:48:35
+ * @LastEditors: linkaiyan
+ * @Description:
+-->
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 interface GiftCard {
   title: string
   price: number
@@ -41,6 +52,7 @@ const giftCards: GiftCard[] = [
 
 <template>
   <main class="home-page">
+    {{ t('txt1') }}
     <section class="gift-panel">
       <h1 class="gift-panel__title">
         活动礼物

@@ -1,48 +1,466 @@
-# vue-project
+# 项目开发文档
 
-This template should help get you started developing with Vue 3 in Vite.
+# 项目背景
 
-## Recommended IDE Setup
+过去活动页主要基于 SPA 方式开发。随着活动数量持续增加，这种模式逐渐暴露出一些明显问题：
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- 多个活动共享同一套工程与运行时，活动之间更容易互相影响。
+- 活动越多，构建产物越大，构建与上传时间也会越来越长。
+- 为了控制构建体积，临时活动开发完成后通常需要定期清理过期活动。
 
-## Recommended Browser Setup
+其中，定期清理旧活动本身也会带来新的问题：
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+- 历史活动代码被删除后，后续很难回溯当时的实现方式。
+- 线上问题复盘、历史行为排查会变得不方便。
+- 相似活动缺少可参考的历史实现，经验难以沉淀。
 
-## Type Support for `.vue` Imports in TS
+因此，本项目最终选择了“活动型 MPA + shared vendor”的方案：
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+- 每个活动独立维护、独立构建、独立发布。
+- 公共运行时依赖通过 shared vendor 复用，降低重复打包和重复上传成本。
 
-## Customize configuration
+## 1. 项目定位
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+本项目是一个面向活动页开发的多页工程。
 
-## Project Setup
+它不是传统意义上的“统一全量构建型 MPA”，而是更偏向业务驱动的“活动型 MPA”：
 
-```sh
+- 活动会持续新增。
+- 每次通常只开发、调试、发布一个活动。
+- 每个活动都拥有自己的入口、页面、资源与类型配置。
+- 公共能力沉淀在 `common` 下，供各活动复用。
+
+## 2. 技术栈
+
+- Vue 3
+- Vite
+- TypeScript
+- Vue Router
+- Pinia
+- Vant
+- UnoCSS
+- Vue I18n
+- Sentry
+- SVGA
+- ESLint
+
+同时，项目中还使用了：
+
+- `vite-plugin-pages`
+- `unplugin-auto-import`
+- `unplugin-vue-components`
+
+用于简化路由、自动导入和组件注册流程。
+
+## 3. 目录结构
+
+项目主要目录如下：
+
+```text
+vue-project
+├─ commands                    # 项目脚本：创建活动、构建、检查、shared vendor 等
+├─ common                      # 公共能力：组件、bridge、http、store、utils、plugins
+├─ dino                        # 活动源码目录
+│  └─ <year>/<activity>/
+│     ├─ api                   # 当前活动接口封装
+│     ├─ assets                # 当前活动静态资源
+│     ├─ components            # 当前活动业务组件
+│     ├─ fonts                 # 当前活动字体资源
+│     ├─ locales               # 当前活动国际化资源
+│     ├─ pages                 # 页面级组件
+│     ├─ router                # 当前活动路由
+│     ├─ types                 # 当前活动类型声明
+│     ├─ App.vue               # 当前活动根组件
+│     ├─ constants.ts          # 当前活动常量
+│     ├─ index.html            # 当前活动入口 HTML
+│     ├─ main.ts               # 当前活动启动入口
+│     └─ tsconfig.json         # 当前活动 TS 配置
+├─ template                    # 活动模板目录
+├─ types                       # 全局类型声明
+├─ vite                        # Vite 拆分配置：alias、build、plugins 等
+├─ sharedVendor.manifest.json  # shared vendor 清单
+└─ vite.config.ts              # Vite 主配置入口
+```
+
+## 4. 架构设计
+
+### 4.1 活动型 MPA
+
+项目的核心思路是：每个活动都是一个独立入口，而不是所有活动共用同一个 SPA 应用。
+
+这意味着：
+
+- 每个活动有自己的 `index.html`
+- 每个活动有自己的 `main.ts`
+- 每个活动有自己的页面、路由、资源和类型
+
+这种方式相比 SPA，更贴合活动业务的实际发布模型。
+
+### 4.2 公共层与活动层分离
+
+项目中按职责分成两层：
+
+- `common`：沉淀公共能力
+- `dino/<year>/<activity>`：承载具体活动业务
+
+公共层负责：
+
+- bridge
+- http
+- 公共组件
+- 公共 store
+- 公共工具函数
+
+活动层负责：
+
+- 当前活动页面
+- 当前活动资源
+- 当前活动接口
+- 当前活动类型
+- 当前活动国际化
+
+### 4.3 参数驱动构建
+
+项目并不是一次性扫描全部活动入口再统一构建，而是通过命令参数指定当前活动。
+
+例如：
+
+```bash
+pnpm dev dino:2024:act1
+pnpm build:test dino:2024:act1
+```
+
+这种方式更符合活动页“单活动开发、单活动发布”的实际流程。
+
+### 4.4 Shared Vendor
+
+MPA 的一个天然问题是：多个活动虽然互相独立，但如果每次都单独构建，就会重复打包公共依赖，例如：
+
+- `vue`
+- `vue-router`
+- `vue-i18n`
+- `svga`
+
+这会带来几个问题：
+
+- 不同活动各自产出一份公共依赖，构建时间更长。
+- 上传到 OSS / CDN 的静态资源总量更大。
+- 用户访问多个活动时，公共依赖无法稳定共享缓存。
+
+因此项目引入了 shared vendor。它在架构层的职责是：
+
+- 将跨活动稳定复用的基础依赖单独构建并发布
+- 活动构建时通过 import map / external 的方式引用 shared 包
+- 将“活动业务发布”与“公共依赖发布”拆开，避免每次活动发布都重复构建公共运行时
+
+当前 shared vendor 由 [`sharedVendor.manifest.json`](/E:/demo/vue-project/sharedVendor.manifest.json) 管理。
+
+## 5. 开发流程
+
+### 5.1 安装依赖
+
+首次拉取项目后，先安装依赖：
+
+```bash
 pnpm install
 ```
 
-### Compile and Hot-Reload for Development
+### 5.2 创建新活动
 
-```sh
-pnpm dev
+通过脚本创建活动：
+
+```bash
+pnpm createActivity
 ```
 
-### Type-Check, Compile and Minify for Production
+创建过程中会依次选择：
 
-```sh
-pnpm build
+- app
+- 年份目录
+- 活动名称
+- 是否启用国际化语言
+- 是否复制 `template/components` 下的指定组件
+
+创建完成后，会生成完整活动目录，并输出对应的启动命令。
+
+### 5.3 启动活动
+
+本项目按活动启动开发服务：
+
+```bash
+pnpm dev dino:2024:act1
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+如果当前活动开启了多语言，在启动前需要先同步语言文件：
 
-```sh
+```bash
+pnpm fetchLanguage dino:2024:act1
+```
+
+### 5.4 类型检查
+
+项目提供按活动维度的类型检查：
+
+```bash
+pnpm check dino:2024:act1
+```
+
+### 5.5 Lint
+
+提交前可执行：
+
+```bash
 pnpm lint
 ```
+
+项目中也配置了 `lint-staged` 与 `commitlint`，在提交时会自动校验。
+
+### 5.6 构建活动
+
+测试环境构建示例：
+
+```bash
+pnpm build:test dino:2024:act1
+```
+
+正式环境构建可按对应命令与流水线模式执行。
+
+### 5.7 本地预览
+
+构建完成后可进行本地预览：
+
+```bash
+pnpm preview dino:2024:act1
+```
+
+## 6. 约定与实践
+
+### 6.1 活动命名规范
+
+活动命名统一采用：
+
+```text
+app:year:activity
+```
+
+例如：
+
+```text
+dino:2024:act1
+```
+
+### 6.2 接口层组织
+
+通用请求能力放在：
+
+- [`common/http/index.ts`](/E:/demo/vue-project/common/http/index.ts)
+
+具体活动接口建议放在活动自己的 `api` 目录下，例如：
+
+- [`dino/2024/act1/api/index.ts`](/E:/demo/vue-project/dino/2024/act1/api/index.ts)
+
+即：
+
+- `common/http` 负责请求能力
+- 活动 `api` 负责接口语义封装
+
+### 6.3 类型组织
+
+建议按下面的原则组织类型：
+
+- 通用全局类型放 `types`
+- 活动专属类型放活动目录下的 `types`
+- 仅供模块使用的类型尽量模块化导出
+- 运行时参与比较的枚举值不要只放在 `.d.ts` 中，应抽成真实常量
+
+### 6.4 开发体验优化
+
+活动拆分之后，开发体验也会更稳定：
+
+- 活动组件和公共组件可以分别做自动导入，减少重复手写 `import`
+- 常用类型可以通过活动级与全局类型声明配合使用，不必在文件顶部反复导入
+- alias 更清晰，活动资源与公共能力都能通过约定路径访问
+- 相比传统大工程中频繁书写 `../../..`，这里可以明显减少长相对路径的使用
+
+这也是活动型 MPA 相比单一 SPA 工程的一个实际收益：
+
+- 工程边界更明确
+- 自动导入配置更容易按活动维度生效
+- 类型与组件提示更容易收敛到当前活动上下文
+
+从实际编码效果上看，优化主要体现在两个方面：
+
+#### 组件与类型导入更少
+
+在未做拆分和自动导入之前，一个页面顶部往往需要显式引入大量内容，例如：
+
+- 多个业务组件
+- 多个弹窗组件
+- 多个业务类型
+- 多个工具函数
+
+而在活动拆分、组件自动导入和类型声明收敛之后，页面顶部只需要保留真正必要的业务导入，顶部 `import` 数量会明显减少，代码可读性也会更好。
+
+#### 路径书写更短
+
+在未使用 alias 时，样式和资源引用通常需要书写较长的相对路径，例如：
+
+```css
+background-image: url('../../../../assets/btn/btn-large-disabled.png');
+```
+
+而在活动 alias 生效后，可以直接写成：
+
+```css
+background-image: url('@PF/assets/btn/btn-large-disabled.png');
+```
+
+这会带来两个直接收益：
+
+- 资源路径更短，阅读和维护成本更低
+- 活动目录迁移或组件层级调整时，不需要频繁回头修改一长串相对路径
+
+## 7. 发布流程
+
+### 7.1 活动发布
+
+活动发布通常只针对当前活动进行：
+
+- 构建当前活动
+- 上传当前活动静态资源到 OSS
+- 由 CDN 对外分发
+
+### 7.2 Shared Vendor 发布
+
+shared vendor 发布流程已经接入流水线。
+
+日常活动发布时，只需要在流水线中按需开启对应选项即可。
+
+只有在以下场景中，才需要重新走 shared vendor 发布流程：
+
+- 新增 shared 包
+- 升级某个 shared 依赖包
+- 调整 shared vendor 构建或发布配置
+
+也就是说，shared vendor 不是每次活动发布都要重新构建。
+
+### 7.3 CDN部署方案
+
+oss上传缓存策略如下：
+
+- `index.html`：不强缓存， `no-cache`
+- hash `js/css/图片/字体/svga/shared vendor`：强缓存
+
+这样既能保证入口更新及时，也能保证静态资源长期复用缓存。
+
+## 8. 与 SPA 的对比
+
+### 8.1 SPA 的特点
+
+传统 SPA 活动开发通常有以下特点：
+
+- 所有活动共用同一个应用入口
+- 路由统一维护在同一套 SPA 应用中
+- 公共依赖天然只构建一次
+
+但随着活动数量增加，会带来：
+
+- 页面和逻辑彼此影响
+- 工程体积膨胀
+- 构建、上传和发布链路越来越重
+
+### 8.2 本项目与 SPA 的区别
+
+本项目更像“活动型 MPA”：
+
+- 每个活动独立入口
+- 每个活动独立路由与资源
+- 每次只构建当前活动
+
+同时，通过 shared vendor 弥补 MPA 在公共依赖复用上的不足。
+
+### 8.3 本项目相对 SPA 的优势
+
+- 活动间隔离更强，互相影响更小
+- 单活动开发、构建、发布更灵活
+- 构建与上传成本更低
+- 历史活动代码更容易保留与追溯
+- 更符合活动业务“不断新增、单独上线”的模型
+
+### 8.4 相对 SPA 的代价
+
+- 默认情况下公共依赖更容易重复打包
+- 工程层面需要额外处理公共依赖复用问题
+- 入口与发布策略会比传统 SPA 更复杂
+- 不同活动之间如果相互跳转，通常会重新进入一个新的页面入口，存在重新加载资源和短暂白屏的可能
+
+这些代价最终通过 shared vendor、参数驱动构建和流水线发布策略来解决。
+
+## 9. 常见问题
+
+### 9.1 MPA 的弊端是什么
+
+MPA 的主要问题是：
+
+- 公共依赖容易重复打包
+- 不同活动之间默认无法共享缓存
+- 活动数量增加后，重复上传的静态资源会越来越多
+
+这也是为什么本项目在活动型 MPA 的基础上，又引入了 shared vendor。
+
+### 9.2 如何解决缓存共享问题
+
+项目通过 shared vendor 解决跨活动公共依赖缓存共享问题。
+
+在实际发布层面，可以这样理解：
+
+- 稳定且高复用的基础依赖会被单独发布
+- 普通活动发布时直接复用这批已发布的 shared 资源
+- 多个活动最终引用同一批 shared 资源 URL，因此用户访问多个活动时可以命中公共依赖缓存
+
+这也是为什么 shared vendor 的发布流程已经独立接入流水线：
+
+- 日常活动发布不需要重复发布 shared vendor
+- 只有新增 shared 包、升级 shared 依赖或调整 shared 配置时，才需要重新触发 shared vendor 发布
+
+### 9.3 不同活动之间跳转为什么会出现重新加载和白屏
+
+这是 MPA 的天然特征之一。
+
+因为不同活动本质上是不同入口页面，所以当用户从一个活动跳到另一个活动时，浏览器会重新加载新的 HTML、JS 和 CSS 资源，而不是像 SPA 一样只在同一个应用内切换路由。
+
+因此会出现：
+
+- 页面重新请求入口资源
+- 重新执行应用初始化
+- 某些情况下出现短暂白屏
+
+这类情况在活动页场景中通常不算高频问题，因为大多数活动是独立入口，用户并不会频繁在多个活动之间来回跳转。
+
+如果业务上确实存在较多跨活动跳转，并且希望尽量降低切换成本，可以考虑：
+
+- 继续使用 shared vendor，减少公共依赖重复加载
+- 保证静态资源走 CDN 强缓存
+- 将需要频繁互跳的活动放在同一个目录层级下统一规划资源路径与发布方式
+
+如果一定要进一步优化，也可以将这类高频互跳活动放在同一个目录下进行更紧密的组织，尽量减少跨活动切换时的资源割裂感。
+
+### 9.4 为什么不用微前端
+
+本项目没有选择微前端，主要原因是：
+
+- 活动页本质上是独立页面，而不是多个子应用拼装成一个主应用
+- 活动业务更关注“独立开发、独立构建、独立发布”
+- 微前端会额外引入主子应用通信、样式隔离、生命周期管理等复杂度
+- 对活动页来说，这些复杂度通常大于收益
+
+在本项目中，活动型 MPA 已经很好地解决了活动隔离问题，而 shared vendor 又进一步补齐了公共依赖复用问题，因此没有必要再引入微前端体系。
+
+## 10. 后续维护建议
+
+- 公共能力优先沉淀到 `common`
+- 活动特有逻辑优先放在活动目录内
+- 常用的活动业务组件，只需要修改少部分内容的，放到 `template/components`，配合脚本命令高效复用
+- shared vendor 仅放稳定、跨活动高复用的依赖
+- 避免把活动运行时上下文直接耦合进公共层
+- 新增活动时尽量通过脚本和模板创建，减少人工复制差异

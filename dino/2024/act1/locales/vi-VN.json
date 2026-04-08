@@ -1,0 +1,14 @@
+{
+  "global": {
+    "noDataText": "Hiện tại chưa có dữ liệu nào~",
+    "lowBalanceText": "Số dư không đủ, vui lòng nạp",
+    "vanListLoadingText": "Đang tải…",
+    "vanListFinishedText": "Không còn nữa đấy...",
+    "vanCalendarStart": "Bắt đầu",
+    "vanCalendarEnd": "Kết thúc",
+    "vanCalendarTitle": "Chọn ngày",
+    "vanCalendarConfirmText": "Xác nhận",
+    "vanCalendarConfirmDisabledText": "Vui lòng chọn thời gian kết thúc",
+    "loadingText": "Hệ thống đang xử lý. Vui lòng không nhấn lại."
+  }
+}

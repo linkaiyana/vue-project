@@ -1,20 +1,22 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-19 14:52:16
- * @LastEditTime: 2026-03-26 15:52:49
+ * @LastEditTime: 2026-04-08 14:48:00
  * @LastEditors: linkaiyan
  * @Description:
  */
 import type { App } from 'vue'
 import type { I18nOptions } from 'vue-i18n'
 import { createI18n } from 'vue-i18n'
+import useClientStore from '@/store/clientStore'
 
 export default {
   install(app: App) {
     // 获取当前语言环境
     const getCurrentLocale = () => {
       // 可以从 localStorage、URL 参数或其他地方获取当前语言设置
-      return localStorage.getItem('locale') || 'zh-CN'
+      const clientStore = useClientStore()
+      return clientStore.clientInfo?.languageCode || 'zh-CN'
     }
 
     // 动态加载特定语言包（带缓存）
@@ -51,15 +53,6 @@ export default {
       const i18n = createI18n(i18nOptions)
 
       app.use(i18n)
-
-      // 提供一个方法用于后续切换语言
-      // app.config.globalProperties.$changeLocale = async (newLocale: string) => {
-      //   if (newLocale !== i18n.global.locale.value) {
-      //     const newMessages = await loadLocaleMessages(newLocale)
-      //     i18n.global.setLocaleMessage(newLocale, newMessages)
-      //     i18n.global.locale.value = newLocale
-      //   }
-      // }
     }
 
     initI18n().catch((error: unknown) => {

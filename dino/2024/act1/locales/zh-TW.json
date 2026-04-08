@@ -1,0 +1,14 @@
+{
+  "global": {
+    "noDataText": "當前暫無数据~",
+    "lowBalanceText": "餘額不足，請儲值",
+    "vanListLoadingText": "加載中....",
+    "vanListFinishedText": "沒有了哦...",
+    "vanCalendarStart": "開始",
+    "vanCalendarEnd": "結束",
+    "vanCalendarTitle": "日期選擇",
+    "vanCalendarConfirmText": "確定",
+    "vanCalendarConfirmDisabledText": "請選擇結束時間",
+    "loadingText": "系統處理中，請勿重複點擊"
+  }
+}

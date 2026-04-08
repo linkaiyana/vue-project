@@ -1,7 +1,7 @@
 <!--
  * @Author: linkaiyan
  * @Date: 2025-10-28 14:23:47
- * @LastEditTime: 2026-04-07 15:37:36
+ * @LastEditTime: 2026-04-08 11:12:07
  * @LastEditors: linkaiyan
  * @Description:
 -->
@@ -9,10 +9,6 @@
 import { receoveCustomerAward } from '../api'
 import { REWARD_STATE, USER_TYPE } from '../api/constants'
 import useUserStore from '../store/userStore'
-import AvatarIcon from './AvatarIcon.vue'
-import ContentBox from './ContentBox.vue'
-import PopupExclusive from './popup/PopupExclusive.vue'
-import PopupScoreQues from './popup/PopupScoreQues.vue'
 
 const userStore = useUserStore()
 const { userInfo } = storeToRefs(userStore)

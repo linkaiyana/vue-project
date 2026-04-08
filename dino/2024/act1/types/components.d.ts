@@ -11,6 +11,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ActiveHeader: typeof import('./../../../../common/components/ActiveHeader.vue')['default']
+    AvatarIcon: typeof import('./../../../../common/components/AvatarIcon.vue')['default']
     BoxCustomBg: typeof import('./../../../../common/components/BoxCustomBg.vue')['default']
     CommonBtn: typeof import('./../../../../common/components/CommonBtn.vue')['default']
     Empty: typeof import('./../../../../common/components/Empty.vue')['default']
