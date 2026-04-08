@@ -1,7 +1,7 @@
 <!--
  * @Author: linkaiyan
  * @Date: 2025-09-29 15:42:29
- * @LastEditTime: 2026-04-08 16:23:26
+ * @LastEditTime: 2026-04-08 16:31:23
  * @LastEditors: linkaiyan
  * @Description:
 -->
@@ -49,7 +49,7 @@ provide('changeTab', changeTab)
     </KeepAlive>
 
     <div class="index-tips">
-      Dino官方擁有活動最終解釋權1
+      Dino官方擁有活動最終解釋權2
     </div>
   </div>
 </template>
