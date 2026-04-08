@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2026-03-17 17:38:29
- * @LastEditTime: 2026-04-07 18:28:48
+ * @LastEditTime: 2026-04-08 16:05:00
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -41,26 +41,10 @@ async function generateSheetFile() {
 
   const allLanguages = response.data.values?.[0] || []
   const allContents = response.data.values?.slice(1) || []
-
   const ctns = allContents.filter(item => item[0] === appPath || item[0] === 'global')
+  const languagesToGenerate = allLanguages.slice(2)
 
-  let targetLanguages: string[] | null = null
-  const constantsPath = path.join(process.cwd(), appPath, 'constants.ts')
-
-  if (fs.existsSync(constantsPath)) {
-    try {
-      const constantsModule = await import(`file://${constantsPath}`)
-      const { languages } = constantsModule
-      if (languages && Array.isArray(languages) && languages.length > 0) {
-        targetLanguages = languages
-      }
-    }
-    catch (error) {
-      console.warn(pc.red('Failed to import constant.ts:'), error)
-    }
-  }
-
-  console.warn(pc.magentaBright(`[ 语言 ] => ${pc.green(targetLanguages ? targetLanguages.join(', ') : 'all')}`))
+  console.warn(pc.magentaBright(`[ 语言 ] => ${pc.green(languagesToGenerate.join(', '))}`))
 
   const localesDir = path.join(process.cwd(), appPath, 'locales')
 
@@ -70,12 +54,8 @@ async function generateSheetFile() {
 
   fs.mkdirSync(localesDir, { recursive: true })
 
-  const languagesToGenerate = targetLanguages || allLanguages.slice(2)
-
   languagesToGenerate.forEach((langCode) => {
-    const langIndex = targetLanguages
-      ? allLanguages.findIndex(lang => lang === langCode)
-      : allLanguages.indexOf(langCode) + 2
+    const langIndex = allLanguages.findIndex(lang => lang === langCode)
 
     if (langIndex === -1 || langIndex < 2) {
       console.warn(pc.red(`Language "${langCode}" not found in spreadsheet.`))
