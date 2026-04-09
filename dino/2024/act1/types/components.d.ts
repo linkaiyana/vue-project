@@ -18,12 +18,10 @@ declare module 'vue' {
     Empty: typeof import('./../../../../common/components/Empty.vue')['default']
     GiftItem: typeof import('./../components/giftItem.vue')['default']
     MProgress: typeof import('./../../../../common/components/MProgress.vue')['default']
-    OuterComponents: typeof import('./../../../../common/components/outerComponents.vue')['default']
     Picture: typeof import('./../../../../common/components/Picture.vue')['default']
     RewardCard: typeof import('./../components/rewardCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SVGAPlayer: typeof import('./../../../../common/components/SVGAPlayer.vue')['default']
-    VanButton: typeof import('vant/es')['Button']
   }
 }
