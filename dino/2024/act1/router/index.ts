@@ -5,11 +5,13 @@
  * @LastEditors: linkaiyan
  * @Description:
  */
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import routes from '~pages'
 
+declare const __ACTIVITY_BASE_PATH__: string
+
 const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(__ACTIVITY_BASE_PATH__),
   routes,
 })
 

@@ -18,13 +18,24 @@ import vaildParams from './vite/utils/vaildParams'
 const argv = process.argv
 const appPath = vaildParams(argv[argv.length - 1])
 
+function joinUrl(baseUrl: string, path: string) {
+  return `${baseUrl.replace(/\/+$/g, '')}/${path.replace(/^\/+/, '')}`
+}
+
 export default defineConfig((ctx) => {
   const env = loadEnv(ctx.mode, resolve(__dirname), '')
   const activityBase = appPath ? `/${appPath.replace(/\\/g, '/')}/` : '/'
+  const shouldUseAbsoluteAssetBase = ctx.command === 'build' && appPath === 'dino/2024/act1'
+  const assetBase = shouldUseAbsoluteAssetBase
+    ? joinUrl(env.VITE_SHARED_VENDOR_BASE_URL || process.env.VITE_SHARED_VENDOR_BASE_URL || '', activityBase)
+    : activityBase
   const sharedVendor = readSharedVendorConfig(resolve(__dirname), env)
 
   return {
-    base: activityBase,
+    base: assetBase,
+    define: {
+      __ACTIVITY_BASE_PATH__: JSON.stringify(activityBase),
+    },
     assetsInclude: ['**/*.svga'],
     plugins: createVitePlugin(sharedVendor, ctx.mode),
     resolve: {
