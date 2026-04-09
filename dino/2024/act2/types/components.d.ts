@@ -11,12 +11,16 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ActiveHeader: typeof import('./../../../../common/components/ActiveHeader.vue')['default']
+    AvatarIcon: typeof import('./../../../../common/components/AvatarIcon.vue')['default']
+    BoxCustomBg: typeof import('./../../../../common/components/BoxCustomBg.vue')['default']
+    CommonBtn: typeof import('./../../../../common/components/CommonBtn.vue')['default']
     Empty: typeof import('./../../../../common/components/Empty.vue')['default']
     MProgress: typeof import('./../../../../common/components/MProgress.vue')['default']
-    OuterComponents: typeof import('./../../../../common/components/outerComponents.vue')['default']
     Picture: typeof import('./../../../../common/components/Picture.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SVGAPlayer: typeof import('./../../../../common/components/SVGAPlayer.vue')['default']
     VanButton: typeof import('vant/es')['Button']
   }
 }
