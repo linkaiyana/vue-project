@@ -196,9 +196,11 @@ function processFile(sourcePath: string, targetPath: string, fileName: string, o
   switch (fileName) {
     case 'constants.ts': {
       const activityName = [options.selectedApp, options.folder, options.folderName].join(':')
+      const activityPath = [options.selectedApp, options.folder, options.folderName].join('/')
 
       content = content
         .replace(/'\{\{FOLDER_NAME\}\}'/g, `'${activityName}'`)
+        .replace(/\{\{ACTIVITY_PATH\}\}/g, activityPath)
         .replace(/Boolean\('\{\{IS_USE_I18N\}\}'\)/g, String(options.needI18n))
       break
     }
