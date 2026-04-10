@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2025-12-02 15:01:44
- * @LastEditTime: 2026-04-10 17:07:54
+ * @LastEditTime: 2026-04-10 17:42:19
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -32,7 +32,7 @@ export default defineConfig((ctx) => {
   const sharedVendor = readSharedVendorConfig(resolve(__dirname), env)
 
   return {
-    base: normalizedAppPath ? `/${normalizedAppPath}/` : '/',
+    base: normalizedAppPath ? `/active/newact/${normalizedAppPath}/` : '/',
     assetsInclude: ['**/*.svga'],
     plugins: createVitePlugin(sharedVendor, ctx.mode),
     resolve: {
