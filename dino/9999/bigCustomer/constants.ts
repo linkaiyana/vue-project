@@ -7,6 +7,7 @@
  */
 // 活动文件夹名
 const activityName = 'dino:9999:bigCustomer'
+const activityPath = '/dino/9999/bigCustomer/'
 
 // 是否开启 i18n
 const isUseI18n = false
@@ -16,6 +17,7 @@ const languages = []
 
 export {
   activityName,
+  activityPath,
   isUseI18n,
   languages,
 }

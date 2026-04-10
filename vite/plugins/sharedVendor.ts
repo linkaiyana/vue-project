@@ -57,7 +57,7 @@ function resolveConfiguredVersion(packageName: string, configuredVersion: string
 
 function readSharedVendorConfig(projectRoot: string, env: Record<string, string>) {
   const manifestSource = readManifestSource(projectRoot)
-  const sharedVendorBaseUrl = normalizePath(env.VITE_SHARED_VENDOR_BASE_URL || process.env.VITE_SHARED_VENDOR_BASE_URL || '')
+  const sharedVendorBaseUrl = normalizePath(env.VITE_CDN_URL || process.env.VITE_CDN_URL || '')
   const remotePrefix = normalizePath(process.env.SHARED_VENDOR_REMOTE_PREFIX || 'vendor')
 
   if (!manifestSource) {
@@ -69,7 +69,7 @@ function readSharedVendorConfig(projectRoot: string, env: Record<string, string>
   }
 
   if (!sharedVendorBaseUrl) {
-    throw new Error('Missing VITE_SHARED_VENDOR_BASE_URL. Publish shared vendors first and configure the shared vendor base URL before building activities.')
+    throw new Error('Missing VITE_CDN_URL. Publish shared vendors first and configure the shared vendor base URL before building activities.')
   }
 
   const esmEntries = Object.entries(manifestSource)

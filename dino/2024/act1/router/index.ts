@@ -7,11 +7,10 @@
  */
 import { createRouter, createWebHistory } from 'vue-router'
 import routes from '~pages'
-
-declare const __ACTIVITY_BASE_PATH__: string
+import { activityPath } from '../constants'
 
 const router = createRouter({
-  history: createWebHistory(__ACTIVITY_BASE_PATH__),
+  history: createWebHistory(activityPath),
   routes,
 })
 

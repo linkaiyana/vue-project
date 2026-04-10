@@ -7,6 +7,7 @@
  */
 // 活动文件夹名
 const activityName = 'dino:2024:act1'
+const activityPath = '/dino/2024/act1/'
 
 // 是否开启 unocss
 const isUseUnocss = true
@@ -18,6 +19,7 @@ const languages = ['zh-CN', 'en-US']
 
 export {
   activityName,
+  activityPath,
   isUseI18n,
   isUseUnocss,
   languages,

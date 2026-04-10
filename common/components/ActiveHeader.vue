@@ -27,7 +27,7 @@ const headerClass = computed(() => {
   <header class="relative z-0 w-[100%]" :class="headerClass">
     <img
       :src="headerImage"
-      class="pointer-events-none absolute z-0 w-[100%]"
+      class="pointer-events-none absolute left-0 top-0 z-0 w-[100%]"
       alt="header"
       title="header"
       fetchpriority="high"

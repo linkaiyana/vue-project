@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2026-01-28 11:13:51
- * @LastEditTime: 2026-03-26 12:06:30
+ * @LastEditTime: 2026-04-09 16:26:10
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -16,9 +16,6 @@ import vaildParams from '../vite/utils/vaildParams'
 const command = argv[2]
 const params = argv[argv.length - 1]
 const basePath = vaildParams(params)
-
-// 注入全局环境变量，供 vite.config.ts 使用
-process.env.CURRENT_ACTIVITY_PATH = basePath
 
 /**
  * 封装 spawn 为 Promise，解决 ora 动画卡顿并实时打印日志
@@ -90,7 +87,7 @@ async function main() {
 
       case 'preview': {
         console.warn(pc.cyan('正在启动预览服务...'))
-        await runCommand('vite', ['preview', '--outDir', `dist/${basePath}`])
+        await runCommand('vite', ['preview', '--outDir', `dist/${basePath}`, '--', `${basePath}`])
         break
       }
 
