@@ -1,7 +1,7 @@
 <!--
  * @Author: linkaiyan
  * @Date: 2025-12-02 15:34:56
- * @LastEditTime: 2026-04-10 17:51:29
+ * @LastEditTime: 2026-04-10 17:55:33
  * @LastEditors: linkaiyan
  * @Description:
 -->
@@ -9,7 +9,7 @@
   <main class="about-page">
     <section class="about-page__panel">
       <p class="about-page__eyebrow">
-        Reward Preview3
+        Reward Preview4
       </p>
       <RewardCard />
     </section>
