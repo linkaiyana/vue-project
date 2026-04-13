@@ -1,7 +1,7 @@
 /*
  * @Author: linkaiyan
  * @Date: 2026-03-11 17:53:04
- * @LastEditTime: 2026-03-31 16:08:39
+ * @LastEditTime: 2026-04-13 11:10:14
  * @LastEditors: linkaiyan
  * @Description:
  */
@@ -42,7 +42,7 @@ export default function createSentryPlugin(options: CreateSentryOptions) {
           }),
         ],
         // Performance monitoring.
-        tracesSampleRate: 0.1,
+        tracesSampleRate: 0.05,
         tracePropagationTargets: [
           // 'localhost',
           // /^https:\/\/test-env\.dinoapi\.com\/api/,
